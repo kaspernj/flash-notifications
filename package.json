@@ -1,12 +1,12 @@
 {
   "name": "flash-notifications",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "dependencies": {
     "diggerize": "^1.0.3",
     "prop-types-exact": "^1.2.0"
   },
-  "devDependencies": {
+  "devDependenciesOnlyForLocalDevelopment": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
