@@ -1,6 +1,6 @@
 import "./style"
 import {digg, digs} from "diggerize"
-import {EventListener} from "@kaspernj/api-maker"
+import EventListener from "@kaspernj/api-maker/src/event-listener"
 import Notification from "./notification"
 
 export default class FlashNotificationsContainer extends BaseComponent {
