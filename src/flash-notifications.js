@@ -1,4 +1,4 @@
-import CustomError from "@kaspernj/api-maker/src/custom-error"
+import BaseError from "@kaspernj/api-maker/src/base-error"
 import ValidationError from "@kaspernj/api-maker/src/validation-error"
 
 export default class FlashMessage {
@@ -7,7 +7,7 @@ export default class FlashMessage {
   }
 
   static error(error) {
-    if (error instanceof CustomError) {
+    if (error instanceof BaseError) {
       if (error.args.response && error.args.response.errors) {
         const errors = digg(error, "args", "response", "errors")
         const errorMessages = errors.map((error) => {
