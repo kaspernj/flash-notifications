@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "name": "flash-notifications",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "private": false,
   "dependencies": {
     "diggerize": "^1.0.5",
