@@ -31,8 +31,8 @@ const NotificationsNotification = (props) => {
   }
 
   return (
-    <Pressable onPress={onRemovedClicked}>
-      <View dataSet={{class: classNames("flash-notifications-notification", className), type}} style={style}>
+    <Pressable dataSet={{class: classNames("flash-notifications-notification", className), type}} onPress={onRemovedClicked}>
+      <View style={style}>
         <View dataSet={{class: "notification-title"}} style={{marginBottom: 5}}>
           <Text style={{color: "#fff", fontWeight: "bold"}}>
             {title}
