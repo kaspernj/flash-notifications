@@ -1,41 +1,23 @@
-import "./style"
-import {digg, digs} from "diggerize"
-import EventListener from "@kaspernj/api-maker/src/event-listener"
+import {memo, useCallback} from "react"
+import {digg} from "diggerize"
 import Notification from "./notification"
+import useEventListener from "@kaspernj/api-maker/src/use-event-listener"
+import useShape from "set-state-compare/src/use-shape"
+import {View} from "react-native"
 
-export default class FlashNotificationsContainer extends BaseComponent {
-  count = 2
-  state = {
+const FlashNotificationsContainer = (props) => {
+  const s = useShape(props)
+
+  s.useStates({
+    count: 0,
     notifications: []
-  }
+  })
 
-  render() {
-    const {notifications} = digs(this.state, "notifications")
-
-    return (
-      <div className="flash-notifications-container">
-        <EventListener event="pushNotification" onCalled={this.onPushNotification} target={window} />
-
-        {notifications.map((notification) =>
-          <Notification
-            className="mb-3"
-            key={`notification-${notification.count}`}
-            message={notification.message}
-            onRemovedClicked={(e) => this.onRemovedClicked(e, notification)}
-            title={notification.title}
-            type={notification.type}
-          />
-        )}
-      </div>
-    )
-  }
-
-  onPushNotification = (event) => {
-    const count = this.count
+  const onPushNotification = useCallback((event) => {
     const detail = digg(event, "detail")
+    const count = s.s.count + 1
 
-    this.count += 1
-    setTimeout(() => this.removeNotification(count), 4000)
+    setTimeout(() => removeNotification(count), 4000)
 
     const notification = {
       count,
@@ -44,17 +26,43 @@ export default class FlashNotificationsContainer extends BaseComponent {
       type: digg(detail, "type")
     }
 
-    this.setState({notifications: this.state.notifications.concat([notification])})
-  }
+    s.set({count, notifications: s.s.notifications.concat([notification])})
+  }, [])
 
-  onRemovedClicked(e, notification) {
+  const onRemovedClicked = useCallback((e, notification) => {
     e.preventDefault()
-    this.removeNotification(digg(notification, "count"))
-  }
+    removeNotification(digg(notification, "count"))
+  }, [])
 
-  removeNotification(count) {
-    this.setState({
-      notifications: this.state.notifications.filter((notification) => notification.count != count)
+  const removeNotification = useCallback((count) => {
+    s.set({
+      notifications: s.s.notifications.filter((notification) => notification.count != count)
     })
-  }
+  }, [])
+
+  useEventListener(window, "pushNotification", onPushNotification)
+
+  return (
+    <View
+      dataSet={{class: "flash-notifications-container"}}
+      style={{
+        position: "fixed",
+        zIndex: 99999,
+        top: 20,
+        right: 20
+      }}
+    >
+      {s.s.notifications.map((notification) =>
+        <Notification
+          key={`notification-${notification.count}`}
+          message={notification.message}
+          onRemovedClicked={(e) => onRemovedClicked(e, notification)}
+          title={notification.title}
+          type={notification.type}
+        />
+      )}
+    </View>
+  )
 }
+
+export default memo(FlashNotificationsContainer)
