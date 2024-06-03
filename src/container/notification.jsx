@@ -8,13 +8,14 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
   static propTypes = PropTypesExact({
     className: PropTypes.string,
     message: PropTypes.string.isRequired,
+    notification: PropTypes.object.isRequired,
     onRemovedClicked: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
   })
 
   render() {
-    const {className, message, onRemovedClicked, title, type} = this.props
+    const {className, message, title, type} = this.props
 
     const style = {
       width: 300,
@@ -42,7 +43,7 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
     }
 
     return (
-      <Pressable dataSet={{class: classNames("flash-notifications-notification", className), type}} onPress={onRemovedClicked}>
+      <Pressable dataSet={{class: classNames("flash-notifications-notification", className), type}} onPress={this.onRemovedClicked}>
         <View style={style}>
           <View dataSet={{class: "notification-title"}} style={{marginBottom: 5}}>
             <Text style={{color: "#fff", fontWeight: "bold"}}>
@@ -57,5 +58,9 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
         </View>
       </Pressable>
     )
+  }
+
+  onRemovedClicked = () => {
+    this.p.onRemovedClicked(this.p.notification)
   }
 }))

@@ -30,7 +30,8 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
           <Notification
             key={`notification-${notification.count}`}
             message={notification.message}
-            onRemovedClicked={(e) => this.onRemovedClicked(e, notification)}
+            notification={notification}
+            onRemovedClicked={this.onRemovedClicked}
             title={notification.title}
             type={notification.type}
           />
@@ -55,10 +56,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     this.setState({count, notifications: this.state.notifications.concat([notification])})
   }
 
-  onRemovedClicked = (e, notification) => {
-    e.preventDefault()
-    removeNotification(digg(notification, "count"))
-  }
+  onRemovedClicked = (notification) => this.removeNotification(digg(notification, "count"))
 
   removeNotification = (count) => {
     this.setState({
