@@ -22,6 +22,11 @@ diggerize@^1.0.5:
   resolved "https://registry.yarnpkg.com/diggerize/-/diggerize-1.0.5.tgz#268fd91f204959ee85bc7a0ee776178870a470f2"
   integrity sha512-DQZM0okJRCslVWAuyR6GCZfb9vdPApymlIq//ax53KxUAwvnUTLegYFIyvPm3oXBYGTdbaUV/iZ4K+NDSahDAA==
 
+"fetching-object@>= 1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fetching-object/-/fetching-object-1.0.1.tgz#0182826488d05b9008b5cc70b7d92bf4b9f908b4"
+  integrity sha512-TzN9rlL9ZGzTbHClKAT+bPYLgKmb4pDTyIJWWmVWQYwVROSXe12dO+l/rosN2+NBLOMDjMu3neTRNhjyj6UMRg==
+
 function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
@@ -76,3 +81,10 @@ reflect.ownkeys@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/reflect.ownkeys/-/reflect.ownkeys-0.2.0.tgz#749aceec7f3fdf8b63f927a04809e90c5c0b3460"
   integrity sha1-dJrO7H8/34tj+SegSAnpDFwLNGA=
+
+set-state-compare@^1.0.45:
+  version "1.0.45"
+  resolved "https://registry.yarnpkg.com/set-state-compare/-/set-state-compare-1.0.45.tgz#12ef420cdad57f67cd716e1e2f8b6dbf7087d84b"
+  integrity sha512-qDx0hJ8J3Z0p9iRAhuaVJoTr8Mv221vcf0nniL++1M3F0W7KIUJrSiJMVQT3J7PhismYdOpCgexfNhn92cgmrg==
+  dependencies:
+    fetching-object ">= 1.0.1"
