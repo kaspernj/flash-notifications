@@ -61,6 +61,6 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
   }
 
   onRemovedClicked = () => {
-    this.p.onRemovedClicked(this.p.notification)
+    this.props.onRemovedClicked(this.props.notification)
   }
 }))
