@@ -6,7 +6,7 @@
   "dependencies": {
     "diggerize": "^1.0.5",
     "prop-types-exact": "^1.2.5",
-    "set-state-compare": "^1.0.52"
+    "set-state-compare": "^1.0.53"
   },
   "devDependenciesOnlyForLocalDevelopment": {
     "@testing-library/jest-dom": "^5.11.4",
