@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "FlashNotificationsModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.flashnotifications.FlashNotificationsModule"
+    ]
+  }
+}
