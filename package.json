@@ -1,46 +1,47 @@
 {
-  "main": "index.js",
   "name": "flash-notifications",
-  "version": "0.0.10",
-  "private": false,
-  "dependencies": {
-    "diggerize": "^1.0.5",
-    "prop-types-exact": "^1.2.7",
-    "set-state-compare": "^1.0.54"
+  "version": "0.1.0",
+  "description": "My new module",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "test": "expo-module test",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module",
+    "open:ios": "xed example/ios",
+    "open:android": "open -a \"Android Studio\" example/android"
   },
-  "devDependenciesOnlyForLocalDevelopment": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+  "keywords": [
+    "react-native",
+    "expo",
+    "flash-notifications",
+    "FlashNotifications"
+  ],
+  "repository": "https://github.com/kaspernj/flash-notifications",
+  "bugs": {
+    "url": "https://github.com/kaspernj/flash-notifications/issues"
+  },
+  "author": "kaspernj <kasper@diestoeckels.de> (https://github.com/kaspernj)",
+  "license": "MIT",
+  "homepage": "https://github.com/kaspernj/flash-notifications#readme",
+  "dependencies": {
+    "diggerize": "*",
+    "prop-types-exact": "*",
+    "set-state-compare": "*"
+  },
+  "devDependencies": {
+    "@types/react": "~18.3.12",
+    "expo-module-scripts": "^4.0.2",
+    "expo": "~52.0.0",
+    "react-native": "0.76.0"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
   }
 }
