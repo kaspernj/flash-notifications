@@ -52,7 +52,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     const detail = digg(event, "detail")
     const count = this.s.count + 1
 
-    // setTimeout(() => this.removeNotification(count), 4000)
+    setTimeout(() => this.removeNotification(count), 4000)
 
     const notification = {
       count,
