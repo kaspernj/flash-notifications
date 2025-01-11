@@ -1,4 +1,4 @@
-import {memo} from "react"
+import React, {memo} from "react"
 import {digg} from "diggerize"
 import Notification from "./notification"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
@@ -12,7 +12,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       notifications: []
     })
 
-    useEventListener(window, "pushNotification", this.onPushNotification)
+    useEventListener(globalThis, "pushNotification", this.tt.onPushNotification)
   }
 
   render() {
@@ -26,7 +26,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
           right: 20
         }}
       >
-        {this.state.notifications.map((notification) =>
+        {this.s.notifications.map((notification) =>
           <Notification
             key={`notification-${notification.count}`}
             message={notification.message}
@@ -53,14 +53,14 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       type: digg(detail, "type")
     }
 
-    this.setState({count, notifications: this.state.notifications.concat([notification])})
+    this.setState({count, notifications: this.s.notifications.concat([notification])})
   }
 
   onRemovedClicked = (notification) => this.removeNotification(digg(notification, "count"))
 
   removeNotification = (count) => {
     this.setState({
-      notifications: this.state.notifications.filter((notification) => notification.count != count)
+      notifications: this.s.notifications.filter((notification) => notification.count != count)
     })
   }
 }))
