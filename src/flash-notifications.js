@@ -63,6 +63,6 @@ export default class FlashMessage {
       }
     })
 
-    window.dispatchEvent(event)
+    globalThis.dispatchEvent(event)
   }
 }
