@@ -1,12 +1,13 @@
 import BaseError from "@kaspernj/api-maker/src/base-error"
-import configuration from "./configuration"
-import events from "./events"
 import ValidationError from "@kaspernj/api-maker/src/validation-error"
 import {digg} from "diggerize"
 
+import configuration from "./configuration"
+import events from "./events"
+
 export default class FlashNotifications {
   static alert(message) {
-    FlashMessage.show({type: "alert", text: message})
+    FlashNotifications.show({type: "alert", text: message})
   }
 
   static error(error) {
@@ -21,17 +22,17 @@ export default class FlashNotifications {
           return digg(error, "message")
         })
 
-        FlashMessage.alert(errorMessages.join(". "))
+        FlashNotifications.alert(errorMessages.join(". "))
       } else {
         throw error
       }
     } else if (error instanceof ValidationError) {
       if (error.hasUnhandledErrors()) {
-        FlashMessage.alert(error.message)
+        FlashNotifications.alert(error.message)
       } else {
         const defaultValue = "Couldn't submit because of validation errors."
 
-        FlashMessage.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
+        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
       }
     } else {
       console.error("Didnt know what to do with that error", error)
@@ -44,7 +45,7 @@ export default class FlashNotifications {
   }
 
   static success(message) {
-    FlashMessage.show({type: "success", text: message})
+    FlashNotifications.show({type: "success", text: message})
   }
 
   static show(args) {

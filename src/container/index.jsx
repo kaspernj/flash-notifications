@@ -1,10 +1,10 @@
 import useEventEmitter from "@kaspernj/api-maker/src/use-event-emitter"
 import {digg} from "diggerize"
-import events from "../events"
 import React, {memo} from "react"
 import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
 
+import events from "../events"
 import Notification from "./notification"
 
 const styles = StyleSheet.create({
