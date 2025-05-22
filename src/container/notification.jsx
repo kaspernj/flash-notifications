@@ -1,9 +1,9 @@
-import {Pressable, StyleSheet, Text, View} from "react-native"
-import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
-import React, {memo, useMemo} from "react"
 import classNames from "classnames"
 import PropTypes from "prop-types"
 import PropTypesExact from "prop-types-exact"
+import React, {memo, useMemo} from "react"
+import {Pressable, StyleSheet, Text, View} from "react-native"
+import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
 
 const styles = StyleSheet.create({
   view: {

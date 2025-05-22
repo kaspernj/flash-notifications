@@ -34,10 +34,10 @@
     "set-state-compare": "*"
   },
   "devDependencies": {
-    "@types/react": "~19.0.5",
+    "@types/react": "~18.3.12",
     "expo-module-scripts": "^4.0.2",
-    "expo": "~52.0.0",
-    "react-native": "0.77.1"
+    "expo": "~52.0.35",
+    "react-native": "~0.76.9"
   },
   "peerDependencies": {
     "expo": "*",

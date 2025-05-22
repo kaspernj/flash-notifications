@@ -1,9 +1,10 @@
-import React, {memo} from "react"
-import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
-import {StyleSheet, View} from "react-native"
-import {digg} from "diggerize"
-import Notification from "./notification"
 import useEventListener from "@kaspernj/api-maker/src/use-event-listener"
+import {digg} from "diggerize"
+import React, {memo} from "react"
+import {StyleSheet, View} from "react-native"
+import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
+
+import Notification from "./notification"
 
 const dataSets = {
   view: {class: "flash-notifications-container"}
