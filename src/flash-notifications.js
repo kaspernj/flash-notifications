@@ -1,5 +1,6 @@
 import BaseError from "@kaspernj/api-maker/src/base-error"
 import ValidationError from "@kaspernj/api-maker/src/validation-error"
+import {digg} from "diggerize"
 
 export default class FlashMessage {
   static alert(message) {
