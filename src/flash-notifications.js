@@ -1,8 +1,10 @@
 import BaseError from "@kaspernj/api-maker/src/base-error"
+import configuration from "./configuration"
+import events from "./events"
 import ValidationError from "@kaspernj/api-maker/src/validation-error"
 import {digg} from "diggerize"
 
-export default class FlashMessage {
+export default class FlashNotifications {
   static alert(message) {
     FlashMessage.show({type: "alert", text: message})
   }
@@ -27,7 +29,9 @@ export default class FlashMessage {
       if (error.hasUnhandledErrors()) {
         FlashMessage.alert(error.message)
       } else {
-        FlashMessage.alert(I18n.t("js.notification.couldnt_submit_because_of_validation_errors")) // eslint-disable-line no-undef
+        const defaultValue = "Couldn't submit because of validation errors."
+
+        FlashMessage.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
       }
     } else {
       console.error("Didnt know what to do with that error", error)
@@ -47,23 +51,19 @@ export default class FlashMessage {
     let title
 
     if (args.type == "alert") {
-      title = I18n.t("js.shared.alert") // eslint-disable-line no-undef
+      title = configuration.translate("js.shared.alert", {defaultValue: "Alert"})
     } else if (args.type == "error") {
-      title = I18n.t("js.shared.error") // eslint-disable-line no-undef
+      title = configuration.translate("js.shared.error", {defaultValue: "Error"})
     } else if (args.type == "success") {
-      title = I18n.t("js.shared.success") // eslint-disable-line no-undef
+      title = configuration.translate("js.shared.success", {defaultValue: "Success"})
     } else {
-      title = I18n.t("js.shared.notification") // eslint-disable-line no-undef
+      title = configuration.translate("js.shared.notification", {defaultValue: "Notification"})
     }
 
-    const event = new CustomEvent("pushNotification", {
-      detail: {
-        message: args.text,
-        title,
-        type: args.type
-      }
+    events.emit("pushNotification", {
+      message: args.text,
+      title,
+      type: args.type
     })
-
-    globalThis.dispatchEvent(event)
   }
 }

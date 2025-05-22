@@ -1,14 +1,11 @@
-import useEventListener from "@kaspernj/api-maker/src/use-event-listener"
+import useEventEmitter from "@kaspernj/api-maker/src/use-event-emitter"
 import {digg} from "diggerize"
+import events from "../events"
 import React, {memo} from "react"
 import {StyleSheet, View} from "react-native"
-import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
+import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
 
 import Notification from "./notification"
-
-const dataSets = {
-  view: {class: "flash-notifications-container"}
-}
 
 const styles = StyleSheet.create({
   view: {
@@ -26,13 +23,13 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       notifications: []
     })
 
-    useEventListener(globalThis, "pushNotification", this.tt.onPushNotification)
+    useEventEmitter(events, "pushNotification", this.tt.onPushNotification)
   }
 
   render() {
     return (
       <View
-        dataSet={dataSets.view}
+        dataSet={this.rootViewDataSet ||= {class: "flash-notifications-container"}}
         style={styles.view}
       >
         {this.s.notifications.map((notification) =>
@@ -49,8 +46,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     )
   }
 
-  onPushNotification = (event) => {
-    const detail = digg(event, "detail")
+  onPushNotification = (detail) => {
     const count = this.s.count + 1
 
     setTimeout(() => this.removeNotification(count), 4000)
