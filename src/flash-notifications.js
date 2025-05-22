@@ -27,7 +27,7 @@ export default class FlashMessage {
       if (error.hasUnhandledErrors()) {
         FlashMessage.alert(error.message)
       } else {
-        FlashMessage.alert(I18n.t("js.notification.couldnt_submit_because_of_validation_errors"))
+        FlashMessage.alert(I18n.t("js.notification.couldnt_submit_because_of_validation_errors")) // eslint-disable-line no-undef
       }
     } else {
       console.error("Didnt know what to do with that error", error)
@@ -47,13 +47,13 @@ export default class FlashMessage {
     let title
 
     if (args.type == "alert") {
-      title = I18n.t("js.shared.alert")
+      title = I18n.t("js.shared.alert") // eslint-disable-line no-undef
     } else if (args.type == "error") {
-      title = I18n.t("js.shared.error")
+      title = I18n.t("js.shared.error") // eslint-disable-line no-undef
     } else if (args.type == "success") {
-      title = I18n.t("js.shared.success")
+      title = I18n.t("js.shared.success") // eslint-disable-line no-undef
     } else {
-      title = I18n.t("js.shared.notification")
+      title = I18n.t("js.shared.notification") // eslint-disable-line no-undef
     }
 
     const event = new CustomEvent("pushNotification", {
