@@ -1,5 +1,5 @@
-import BaseError from "@kaspernj/api-maker/src/base-error"
-import ValidationError from "@kaspernj/api-maker/src/validation-error"
+import BaseError from "@kaspernj/api-maker/build/base-error"
+import ValidationError from "@kaspernj/api-maker/build/validation-error"
 import {digg} from "diggerize"
 
 import configuration from "./configuration"

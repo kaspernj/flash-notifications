@@ -1,6 +1,6 @@
-import useEventEmitter from "@kaspernj/api-maker/src/use-event-emitter"
+import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter"
 import {digg} from "diggerize"
-import React, {memo} from "react"
+import React, {memo, useEffect} from "react"
 import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
 
@@ -17,6 +17,8 @@ const styles = StyleSheet.create({
 })
 
 export default memo(shapeComponent(class FlashNotificationsContainer extends ShapeComponent {
+  timeouts = []
+
   setup() {
     this.useStates({
       count: 0,
@@ -24,16 +26,25 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     })
 
     useEventEmitter(events, "pushNotification", this.tt.onPushNotification)
+    useEffect(() => {
+      return () => {
+        for (const timeout of this.tt.timeouts) {
+          clearTimeout(timeout)
+        }
+      }
+    }, [])
   }
 
   render() {
     return (
       <View
-        dataSet={this.rootViewDataSet ||= {class: "flash-notifications-container"}}
+        dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
         style={styles.view}
+        testID="flash-notificaitons/container"
       >
         {this.s.notifications.map((notification) =>
           <Notification
+            count={notification.count}
             key={`notification-${notification.count}`}
             message={notification.message}
             notification={notification}
@@ -48,8 +59,9 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
   onPushNotification = (detail) => {
     const count = this.s.count + 1
+    const timeout = setTimeout(() => this.removeNotification(count), 4000)
 
-    setTimeout(() => this.removeNotification(count), 4000)
+    this.tt.timeouts.push(timeout)
 
     const notification = {
       count,

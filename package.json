@@ -2,13 +2,15 @@
   "name": "flash-notifications",
   "version": "0.0.16",
   "description": "My new module",
+  "type": "commonjs",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
     "lint": "expo-module lint",
-    "test": "expo-module test",
+    "test": "jest --detectOpenHandles",
+    "test-expo": "expo-module test",
     "prepare": "expo-module prepare",
     "prepublishOnly": "expo-module prepublishOnly",
     "expo-module": "expo-module",
@@ -28,19 +30,28 @@
   "author": "kaspernj <kasper@diestoeckels.de> (https://github.com/kaspernj)",
   "license": "MIT",
   "homepage": "https://github.com/kaspernj/flash-notifications#readme",
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|diggerize|fetching-object|set-state-compare|@kaspernj/api-maker)"
+    ]
+  },
   "dependencies": {
     "classnames": "^2.5.1",
-    "diggerize": "*",
+    "diggerize": ">= 1.0.9",
+    "fetching-object": "^1.0.3",
     "prop-types-exact": "*",
-    "set-state-compare": "*"
+    "set-state-compare": ">= 1.0.57"
   },
   "devDependencies": {
+    "@testing-library/react-native": "~13.0.1",
     "@types/react": "~18.3.12",
     "expo": "~53.0.9",
     "expo-module-scripts": "^4.0.2",
     "react-native": "~0.76.9"
   },
   "peerDependencies": {
+    "@kaspernj/api-maker": "*",
     "expo": "*",
     "react": "*",
     "react-native": "*"

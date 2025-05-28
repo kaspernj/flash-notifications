@@ -44,6 +44,7 @@ const messageViewDataSet = {class: "notification-message"}
 export default memo(shapeComponent(class NotificationsNotification extends ShapeComponent {
   static propTypes = PropTypesExact({
     className: PropTypes.string,
+    count: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
     notification: PropTypes.object.isRequired,
     onRemovedClicked: PropTypes.func.isRequired,
@@ -52,7 +53,8 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
   })
 
   render() {
-    const {className, message, title, type} = this.props
+    const {count, message, title, type} = this.p
+    const {className} = this.props
 
     const viewStyles = useMemo(
       () => {
@@ -79,12 +81,12 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
       <Pressable dataSet={pressableDataSet} onPress={this.tt.onRemovedClicked}>
         <View style={viewStyles}>
           <View dataSet={titleViewDataSet} style={styles.titleview}>
-            <Text style={styles.titleText}>
+            <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
               {title}
             </Text>
           </View>
           <View dataSet={messageViewDataSet}>
-            <Text style={styles.messageText}>
+            <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
               {message}
             </Text>
           </View>
