@@ -1,17 +1,24 @@
 import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter"
 import {digg} from "diggerize"
-import React, {memo, useEffect} from "react"
+import React, {memo, useEffect, useMemo} from "react"
 import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
+import useEnvironment from "@kaspernj/api-maker/build/use-environment.js"
+import {useSafeAreaInsets} from "react-native-safe-area-context"
+import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
 import events from "../events"
 import Notification from "./notification"
 
 const styles = StyleSheet.create({
   view: {
-    position: "fixed",
-    zIndex: 99999,
-    top: 20,
+    zIndex: 99999
+  },
+  viewSmDown: {
+    right: 20,
+    left: 20
+  },
+  viewMdUp: {
     right: 20
   }
 })
@@ -36,10 +43,21 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   }
 
   render() {
+    const {isNative} = useEnvironment()
+    const insets = useSafeAreaInsets()
+    const viewStyleFromStyles = useStyles(styles, "view")
+    const viewStyle = useMemo(() => [
+      viewStyleFromStyles,
+      {
+        position: isNative ? "absolute" : "fixed",
+        top: insets.top + 20
+      }
+    ], [insets.top])
+
     return (
       <View
         dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
-        style={styles.view}
+        style={viewStyle}
         testID="flash-notificaitons/container"
       >
         {this.s.notifications.map((notification) =>

@@ -4,15 +4,21 @@ import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
 import {Pressable, StyleSheet, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
+import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
 const styles = StyleSheet.create({
   view: {
-    width: 300,
-    maxWidth: "100%",
     marginBottom: 15,
     padding: 15,
     borderRadius: 11,
     cursor: "pointer"
+  },
+  viewSmDown: {
+    width: "100%"
+  },
+  viewMdUp: {
+    width: 300,
+    maxWidth: "100%"
   },
   viewError: {
     border: "1px solid rgba(161, 34, 32, 0.95)",
@@ -41,7 +47,7 @@ const styles = StyleSheet.create({
 const titleViewDataSet = {class: "notification-title"}
 const messageViewDataSet = {class: "notification-message"}
 
-export default memo(shapeComponent(class NotificationsNotification extends ShapeComponent {
+export default memo(shapeComponent(class FlashNotificationsNotification extends ShapeComponent {
   static propTypes = PropTypesExact({
     className: PropTypes.string,
     count: PropTypes.number.isRequired,
@@ -56,18 +62,11 @@ export default memo(shapeComponent(class NotificationsNotification extends Shape
     const {count, message, title, type} = this.p
     const {className} = this.props
 
-    const viewStyles = useMemo(
-      () => {
-        const viewStyles = [styles.view]
-
-        if (type == "error") viewStyles.push(styles.viewError)
-        if (type == "success") viewStyles.push(styles.viewSuccess)
-        if (type == "alert") viewStyles.push(styles.viewAlert)
-
-        return viewStyles
-      },
-      [type]
-    )
+    const viewStyles = useStyles(styles, ["view", {
+      viewError: type == "error",
+      viewSuccess: type == "success",
+      viewAlert: type == "alert"
+    }])
 
     const pressableDataSet = useMemo(
       () => ({
