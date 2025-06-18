@@ -50,7 +50,7 @@
     "react-native": "~0.76.9"
   },
   "peerDependencies": {
-    "@kaspernj/api-maker": "*",
+    "@kaspernj/api-maker": ">= 1.0.2043",
     "expo": "*",
     "react": "*",
     "react-native": "*"
