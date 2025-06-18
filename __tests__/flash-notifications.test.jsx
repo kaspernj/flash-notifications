@@ -5,7 +5,11 @@ import React from "react"
 
 describe("Flash notifications", () => {
   test("it renders", async () => {
-    const screen = render(<Container />)
+    global.innerWidth = 640
+
+    const screen = render(
+      <Container />
+    )
 
     await act(async () => {
       FlashNotifications.success("Test message")
