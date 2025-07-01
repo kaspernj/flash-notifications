@@ -3,7 +3,7 @@ import {digg} from "diggerize"
 import React, {memo, useEffect, useMemo} from "react"
 import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
-import useEnvironment from "@kaspernj/api-maker/build/use-environment.js"
+import useEnvSense from "env-sense/src/use-environment.js"
 import {useSafeAreaInsets} from "react-native-safe-area-context"
 import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
@@ -43,7 +43,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   }
 
   render() {
-    const {isNative} = useEnvironment()
+    const {isNative} = useEnvSense()
     const insets = useSafeAreaInsets()
     const viewStyleFromStyles = useStyles(styles, "view")
     const viewStyle = useMemo(() => [

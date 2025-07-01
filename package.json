@@ -41,6 +41,7 @@
   "dependencies": {
     "classnames": "^2.5.1",
     "diggerize": "^1.0.9",
+    "env-sense": "^1.0.0",
     "fetching-object": "^1.0.3",
     "prop-types-exact": "*",
     "set-state-compare": "^1.0.57"
@@ -53,7 +54,7 @@
     "react-native": "~0.76.9"
   },
   "peerDependencies": {
-    "@kaspernj/api-maker": ">= 1.0.2043",
+    "@kaspernj/api-maker": ">= 1.0.2044",
     "expo": "*",
     "react": "*",
     "react-native": "*",
