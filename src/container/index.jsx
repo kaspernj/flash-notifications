@@ -3,7 +3,7 @@ import {digg} from "diggerize"
 import React, {memo, useEffect, useMemo} from "react"
 import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
-import useEnvSense from "env-sense/src/use-environment.js"
+import useEnvSense from "env-sense/src/use-env-sense.js"
 import {useSafeAreaInsets} from "react-native-safe-area-context"
 import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
