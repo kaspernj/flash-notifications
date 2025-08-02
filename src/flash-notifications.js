@@ -15,7 +15,17 @@ export default class FlashNotifications {
   }
 
   static errorResponse(error) {
-    if (error instanceof BaseError) {
+    if (error instanceof ValidationError) {
+      if (error.hasUnhandledErrors()) {
+        const unhandledErrorMessages = error.getUnhandledErrors().map((subError) => subError.getFullErrorMessages()).flat()
+
+        FlashNotifications.error(unhandledErrorMessages.join(". "))
+      } else {
+        const defaultValue = "Couldn't submit because of validation errors."
+
+        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
+      }
+    } else if (error instanceof BaseError) {
       if (error.args.response && error.args.response.errors) {
         const errors = digg(error, "args", "response", "errors")
         const errorMessages = errors.map((error) => {
@@ -29,14 +39,6 @@ export default class FlashNotifications {
         FlashNotifications.error(errorMessages.join(". "))
       } else {
         throw error
-      }
-    } else if (error instanceof ValidationError) {
-      if (error.hasUnhandledErrors()) {
-        FlashNotifications.error(error.message)
-      } else {
-        const defaultValue = "Couldn't submit because of validation errors."
-
-        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
       }
     } else {
       console.error("Didnt know what to do with that error", error)
