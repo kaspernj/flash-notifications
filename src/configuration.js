@@ -1,6 +1,6 @@
 if (!globalThis.flashNotificationsConfiguration) {
   globalThis.flashNotificationsConfiguration = {
-    translate: (msgId) => msgId
+    translate: (msgId, args) => args?.defaultValue || msgId
   }
 }
 
