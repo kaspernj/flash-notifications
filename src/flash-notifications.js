@@ -10,7 +10,11 @@ export default class FlashNotifications {
     FlashNotifications.show({type: "alert", text: message})
   }
 
-  static error(error) {
+  static error(message) {
+    FlashNotifications.show({type: "error", text: message})
+  }
+
+  static errorResponse(error) {
     if (error instanceof BaseError) {
       if (error.args.response && error.args.response.errors) {
         const errors = digg(error, "args", "response", "errors")
@@ -28,7 +32,7 @@ export default class FlashNotifications {
       }
     } else if (error instanceof ValidationError) {
       if (error.hasUnhandledErrors()) {
-        FlashNotifications.alert(error.message)
+        FlashNotifications.error(error.message)
       } else {
         const defaultValue = "Couldn't submit because of validation errors."
 
@@ -38,10 +42,6 @@ export default class FlashNotifications {
       console.error("Didnt know what to do with that error", error)
       throw error
     }
-  }
-
-  static errorResponse(error) {
-    this.error(error)
   }
 
   static success(message) {
