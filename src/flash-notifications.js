@@ -26,7 +26,7 @@ export default class FlashNotifications {
           return digg(error, "message")
         })
 
-        FlashNotifications.alert(errorMessages.join(". "))
+        FlashNotifications.error(errorMessages.join(". "))
       } else {
         throw error
       }
