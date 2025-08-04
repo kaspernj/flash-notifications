@@ -1,6 +1,6 @@
 {
   "name": "flash-notifications",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "My new module",
   "main": "build/index.js",
   "types": "build/index.d.ts",
