@@ -4,7 +4,6 @@ import React, {memo, useEffect, useMemo} from "react"
 import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
 import useEnvSense from "env-sense/src/use-env-sense.js"
-import {useSafeAreaInsets} from "react-native-safe-area-context"
 import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
 import events from "../events"
@@ -44,15 +43,14 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
   render() {
     const {isNative} = useEnvSense()
-    const insets = useSafeAreaInsets()
     const viewStyleFromStyles = useStyles(styles, "view")
     const viewStyle = useMemo(() => [
       viewStyleFromStyles,
       {
         position: isNative ? "absolute" : "fixed",
-        top: insets.top + 20
+        top: 20
       }
-    ], [insets.top])
+    ], [])
 
     return (
       <View
