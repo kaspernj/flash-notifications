@@ -71,6 +71,7 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
     const pressableDataSet = useMemo(
       () => ({
         class: classNames("flash-notifications-notification", className),
+        role: "dialog",
         type
       }),
       [className, type]

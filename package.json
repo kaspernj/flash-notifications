@@ -1,6 +1,6 @@
 {
   "name": "flash-notifications",
-  "version": "0.0.21",
+  "version": "0.0.23",
   "description": "My new module",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -31,17 +31,14 @@
   "homepage": "https://github.com/kaspernj/flash-notifications#readme",
   "jest": {
     "preset": "jest-expo",
-    "setupFiles": [
-      "./jest.setup.js"
-    ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|diggerize|fetching-object|set-state-compare|@kaspernj/api-maker)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|diggerize|env-sense|fetching-object|set-state-compare|@kaspernj/api-maker)"
     ]
   },
   "dependencies": {
     "classnames": "^2.5.1",
     "diggerize": "^1.0.9",
-    "env-sense": "^1.0.0",
+    "env-sense": "^1.0.1",
     "fetching-object": "^1.0.3",
     "prop-types-exact": "*",
     "set-state-compare": "^1.0.57"
@@ -57,8 +54,7 @@
     "@kaspernj/api-maker": ">= 1.0.2044",
     "expo": "*",
     "react": "*",
-    "react-native": "*",
-    "react-native-safe-area-context": "*"
+    "react-native": "*"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

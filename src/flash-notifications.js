@@ -10,8 +10,22 @@ export default class FlashNotifications {
     FlashNotifications.show({type: "alert", text: message})
   }
 
-  static error(error) {
-    if (error instanceof BaseError) {
+  static error(message) {
+    FlashNotifications.show({type: "error", text: message})
+  }
+
+  static errorResponse(error) {
+    if (error instanceof ValidationError) {
+      if (error.hasUnhandledErrors()) {
+        const unhandledErrorMessages = error.getUnhandledErrors().map((subError) => subError.getFullErrorMessages()).flat()
+
+        FlashNotifications.error(unhandledErrorMessages.join(". "))
+      } else {
+        const defaultValue = "Couldn't submit because of validation errors."
+
+        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
+      }
+    } else if (error instanceof BaseError) {
       if (error.args.response && error.args.response.errors) {
         const errors = digg(error, "args", "response", "errors")
         const errorMessages = errors.map((error) => {
@@ -22,26 +36,14 @@ export default class FlashNotifications {
           return digg(error, "message")
         })
 
-        FlashNotifications.alert(errorMessages.join(". "))
+        FlashNotifications.error(errorMessages.join(". "))
       } else {
         throw error
-      }
-    } else if (error instanceof ValidationError) {
-      if (error.hasUnhandledErrors()) {
-        FlashNotifications.alert(error.message)
-      } else {
-        const defaultValue = "Couldn't submit because of validation errors."
-
-        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
       }
     } else {
       console.error("Didnt know what to do with that error", error)
       throw error
     }
-  }
-
-  static errorResponse(error) {
-    this.error(error)
   }
 
   static success(message) {
