@@ -1,28 +1,21 @@
-import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter"
 import {digg} from "diggerize"
+import PropTypes from "prop-types"
+import propTypesExact from "prop-types-exact"
 import React, {memo, useEffect, useMemo} from "react"
-import {StyleSheet, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
+import useBreakpoint from "@kaspernj/api-maker/build/use-breakpoint"
+import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter"
 import useEnvSense from "env-sense/src/use-env-sense.js"
-import useStyles from "@kaspernj/api-maker/build/use-styles.js"
+import {View} from "react-native"
 
 import events from "../events"
 import Notification from "./notification"
 
-const styles = StyleSheet.create({
-  view: {
-    zIndex: 99999
-  },
-  viewSmDown: {
-    right: 20,
-    left: 20
-  },
-  viewMdUp: {
-    right: 20
-  }
-})
-
 export default memo(shapeComponent(class FlashNotificationsContainer extends ShapeComponent {
+  static propTypes = propTypesExact({
+    insets: PropTypes.object
+  })
+
   timeouts = []
 
   setup() {
@@ -42,15 +35,28 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   }
 
   render() {
+    const insets = this.props.insets || {}
+    const {smDown, mdUp} = useBreakpoint()
     const {isNative} = useEnvSense()
-    const viewStyleFromStyles = useStyles(styles, "view")
-    const viewStyle = useMemo(() => [
-      viewStyleFromStyles,
-      {
+
+    const viewStyle = useMemo(() => {
+      const style = {
         position: isNative ? "absolute" : "fixed",
-        top: 20
+        top: 20 + insets.top,
+        right: insets.right,
+        left: insets.left,
+        zIndex: 99999
       }
-    ], [])
+
+      if (smDown) {
+        style.left += 20
+        style.right += 20
+      } else if (mdUp) {
+        style.right += 20
+      }
+
+      return style
+    }, [isNative, smDown, mdUp, insets.top, insets.right, insets.bottom, insets.left])
 
     return (
       <View
