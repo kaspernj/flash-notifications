@@ -40,23 +40,33 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     const {isNative} = useEnvSense()
 
     const viewStyle = useMemo(() => {
+      let top = 20
+      let right = 0
+      let left = undefined
+
+      if (insets.top) top += insets.top
+      if (insets.right) right += insets.right
+
+      if (smDown) {
+        left = 20
+
+        if (insets.left) left += insets.left
+
+        right += 20
+      } else if (mdUp) {
+        right += 20
+      }
+
       const style = {
         position: isNative ? "absolute" : "fixed",
-        top: 20 + insets.top,
-        right: insets.right,
-        left: insets.left,
+        top,
+        right,
+        left,
         zIndex: 99999
       }
 
-      if (smDown) {
-        style.left += 20
-        style.right += 20
-      } else if (mdUp) {
-        style.right += 20
-      }
-
       return style
-    }, [isNative, smDown, mdUp, insets.top, insets.right, insets.bottom, insets.left])
+    }, [isNative, smDown, mdUp, insets.top, insets.right, insets.left])
 
     return (
       <View
