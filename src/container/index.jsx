@@ -11,7 +11,7 @@ import useEnvSense from "env-sense/src/use-env-sense.js"
 import {View} from "react-native"
 
 import events from "../events.js"
-import Notification from "./notification.js"
+import Notification from "./notification"
 
 /**
  * @typedef {object} NotificationObjectType
