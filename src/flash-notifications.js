@@ -1,7 +1,5 @@
 // @ts-check
 
-import BaseError from "@kaspernj/api-maker/build/base-error.js"
-import ValidationError from "@kaspernj/api-maker/build/validation-error.js"
 import {digg} from "diggerize"
 
 import configuration from "./configuration.js"
@@ -29,7 +27,8 @@ export default class FlashNotifications {
    * @returns {void}
    */
   static errorResponse(error) {
-    if (error instanceof ValidationError) {
+    // @ts-expect-error
+    if (error.apiMakerType == "ValidationError") {
       // @ts-expect-error
       if (error.hasUnhandledErrors()) {
         // @ts-expect-error
@@ -41,7 +40,8 @@ export default class FlashNotifications {
 
         FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
       }
-    } else if (error instanceof BaseError) {
+    // @ts-expect-error
+    } else if (error.apiMakerType == "BaseError") {
       // @ts-expect-error
       if (error.args.response && error.args.response.errors) {
         const errors = /** @type {Array<string | {message: string}[]>} */ (digg(error, "args", "response", "errors"))
