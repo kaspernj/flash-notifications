@@ -41,7 +41,7 @@
     "env-sense": "^1.0.1",
     "fetching-object": "^1.0.3",
     "prop-types-exact": "*",
-    "set-state-compare": "^1.0.57"
+    "set-state-compare": "^1.0.61"
   },
   "devDependencies": {
     "@testing-library/react-native": "~13.2.0",
@@ -51,7 +51,7 @@
     "react-native": "~0.76.9"
   },
   "peerDependencies": {
-    "@kaspernj/api-maker": ">= 1.0.2053",
+    "@kaspernj/api-maker": ">= 1.0.2054",
     "expo": "*",
     "react": "*",
     "react-native": "*"

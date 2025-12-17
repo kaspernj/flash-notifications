@@ -4,7 +4,7 @@ import {digg} from "diggerize"
 import PropTypes from "prop-types"
 import propTypesExact from "prop-types-exact"
 import React, {memo, useEffect, useMemo} from "react"
-import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
+import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import useBreakpoint from "@kaspernj/api-maker/build/use-breakpoint.js"
 import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter.js"
 import useEnvSense from "env-sense/src/use-env-sense.js"
@@ -30,7 +30,6 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   timeouts = []
 
   setup() {
-    // @ts-expect-error
     this.useStates({
       count: 0,
       notifications: []
@@ -47,10 +46,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   }
 
   render() {
-    // @ts-expect-error
     const {notifications} = this.s
-
-    // @ts-expect-error
     const insets = this.props.insets || {}
 
     const {smDown, mdUp} = useBreakpoint()
@@ -113,7 +109,6 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
    * @returns {void}
    */
   onPushNotification = (detail) => {
-    // @ts-expect-error
     const count = this.s.count + 1
     const timeout = setTimeout(() => this.removeNotification(count), 4000)
 
@@ -135,7 +130,6 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   removeNotification = (count) => {
     // @ts-expect-error
     this.setState({
-      // @ts-expect-error
       notifications: this.s.notifications.filter((notification) => notification.count != count)
     })
   }
