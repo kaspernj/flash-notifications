@@ -4,7 +4,8 @@
     "allowJs": true,
     "jsx": "react",
     "outDir": "./build",
-    "sourceMap": true
+    "sourceMap": true,
+    "sourceRoot": "/src"
   },
   "include": ["./src"],
   "exclude": ["**/__mocks__/*", "**/__tests__/*", "**/__rsc_tests__/*"]
