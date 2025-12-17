@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
 import {Pressable, StyleSheet, Text, View} from "react-native"
-import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component"
+import {shapeComponent, ShapeComponent} from "set-state-compare/src/shape-component.js"
 import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
 const styles = StyleSheet.create({
