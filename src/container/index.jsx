@@ -48,7 +48,11 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
   render() {
     // @ts-expect-error
+    const {notifications} = this.s
+
+    // @ts-expect-error
     const insets = this.props.insets || {}
+
     const {smDown, mdUp} = useBreakpoint()
     const {isNative} = useEnvSense()
 
@@ -73,17 +77,19 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
     return (
       <View
+        // @ts-expect-error
         dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
+        // @ts-expect-error
         style={viewStyle}
         testID="flash-notificaitons/container"
       >
-        {this.s.notifications.map((notification) =>
+        {notifications.map((notification) =>
           <Notification
             count={notification.count}
             key={`notification-${notification.count}`}
             message={notification.message}
             notification={notification}
-            onRemovedClicked={this.tt.onRemovedClicked}
+            onRemovedClicked={this.onRemovedClicked}
             title={notification.title}
             type={notification.type}
           />
@@ -97,6 +103,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
    * @returns {void}
    */
   onPushNotification = (detail) => {
+    // @ts-expect-error
     const count = this.s.count + 1
     const timeout = setTimeout(() => this.removeNotification(count), 4000)
 

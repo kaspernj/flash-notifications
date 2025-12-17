@@ -30,7 +30,9 @@ export default class FlashNotifications {
    */
   static errorResponse(error) {
     if (error instanceof ValidationError) {
+      // @ts-expect-error
       if (error.hasUnhandledErrors()) {
+        // @ts-expect-error
         const unhandledErrorMessages = error.getUnhandledErrors().map((subError) => subError.getFullErrorMessages()).flat()
 
         FlashNotifications.error(unhandledErrorMessages.join(". "))
