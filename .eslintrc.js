@@ -6,6 +6,7 @@ module.exports = {
     "eqeqeq": "off",
     "no-return-assign": "off",
     "prettier/prettier": "off",
-    "react-hooks/rules-of-hooks": "off"
+    "react-hooks/rules-of-hooks": "off",
+    "import/order": "off"
   }
 }
