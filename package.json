@@ -39,6 +39,7 @@
     "classnames": "^2.5.1",
     "diggerize": "^1.0.9",
     "env-sense": "^1.0.1",
+    "eventemitter3": "^5.0.1",
     "fetching-object": "^1.0.3",
     "prop-types-exact": "*",
     "set-state-compare": "^1.0.61"

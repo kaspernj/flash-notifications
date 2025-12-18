@@ -1,4 +1,4 @@
-import EventEmitter from "events"
+import {EventEmitter} from "eventemitter3"
 
 if (!globalThis.flashNotificationsEvents) {
   globalThis.flashNotificationsEvents = new EventEmitter()
