@@ -7,7 +7,7 @@
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
-    "lint": "expo-module lint",
+    "lint": "expo-module lint -- --max-warnings 0",
     "test": "jest --detectOpenHandles",
     "test-expo": "expo-module test",
     "prepare": "expo-module prepare",
