@@ -1,4 +1,3 @@
-import classNames from "classnames"
 import PropTypes from "prop-types"
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
@@ -44,9 +43,6 @@ const styles = StyleSheet.create({
   }
 })
 
-const titleViewDataSet = {class: "notification-title"}
-const messageViewDataSet = {class: "notification-message"}
-
 export default memo(shapeComponent(class FlashNotificationsNotification extends ShapeComponent {
   static propTypes = PropTypesExact({
     className: PropTypes.string,
@@ -70,7 +66,7 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
 
     const pressableDataSet = useMemo(
       () => ({
-        class: classNames("flash-notifications-notification", className),
+        class: className,
         role: "dialog",
         type
       }),
@@ -78,14 +74,14 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
     )
 
     return (
-      <Pressable dataSet={pressableDataSet} onPress={this.tt.onRemovedClicked}>
+      <Pressable dataSet={pressableDataSet} onPress={this.tt.onRemovedClicked} testID="flash-notifications-notification">
         <View style={viewStyles}>
-          <View dataSet={titleViewDataSet} style={styles.titleview}>
+          <View style={styles.titleview} testID="notification-title">
             <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
               {title}
             </Text>
           </View>
-          <View dataSet={messageViewDataSet}>
+          <View testID="notification-message">
             <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
               {message}
             </Text>

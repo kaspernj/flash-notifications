@@ -2,9 +2,11 @@
   "extends": "expo-module-scripts/tsconfig.base",
   "compilerOptions": {
     "allowJs": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "jsx": "react",
     "outDir": "./build",
-    "sourceMap": true,
+    "sourceMap": false,
     "sourceRoot": "/src",
     "target": "ES2024"
   },
