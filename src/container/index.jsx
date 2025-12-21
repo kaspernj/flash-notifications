@@ -7,7 +7,7 @@ import React, {memo, useEffect, useMemo} from "react"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import useBreakpoint from "@kaspernj/api-maker/build/use-breakpoint.js"
 import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter.js"
-import useEnvSense from "env-sense/src/use-env-sense.js"
+import useEnvSense from "env-sense/build/use-env-sense.js"
 import {View} from "react-native"
 
 import events from "../events.js"
@@ -121,14 +121,12 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       type: digg(detail, "type")
     }
 
-    // @ts-expect-error
     this.setState({count, notifications: this.s.notifications.concat([notification])})
   }
 
   onRemovedClicked = (notification) => this.removeNotification(digg(notification, "count"))
 
   removeNotification = (count) => {
-    // @ts-expect-error
     this.setState({
       notifications: this.s.notifications.filter((notification) => notification.count != count)
     })
