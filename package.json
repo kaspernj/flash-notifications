@@ -36,7 +36,6 @@
     ]
   },
   "dependencies": {
-    "classnames": "^2.5.1",
     "diggerize": "^1.0.9",
     "env-sense": "^1.0.1",
     "eventemitter3": "^5.0.1",
