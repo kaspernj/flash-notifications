@@ -9,9 +9,7 @@
     "clean": "expo-module clean",
     "export:web": "npm run prepare:dummy && cd example && expo export -p web --output-dir dist",
     "lint": "expo-module lint -- --max-warnings 0",
-    "test": "jest --detectOpenHandles",
-    "test:system": "node scripts/velocious-test.js",
-    "test-expo": "expo-module test",
+    "test": "node scripts/velocious-test.js",
     "prepare": "expo-module prepare",
     "prepare:dummy": "npm run build && rm -rf example/node_modules/flash-notifications && mkdir -p example/node_modules/flash-notifications && cp -r build package.json example/node_modules/flash-notifications/",
     "prepublishOnly": "expo-module prepublishOnly",
@@ -33,12 +31,6 @@
   "author": "kaspernj <kasper@diestoeckels.de> (https://github.com/kaspernj)",
   "license": "MIT",
   "homepage": "https://github.com/kaspernj/flash-notifications#readme",
-  "jest": {
-    "preset": "jest-expo",
-    "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|diggerize|env-sense|fetching-object|set-state-compare|@kaspernj/api-maker)"
-    ]
-  },
   "dependencies": {
     "diggerize": "^1.0.9",
     "env-sense": "^1.0.2",
@@ -47,7 +39,6 @@
     "prop-types-exact": "*"
   },
   "devDependencies": {
-    "@testing-library/react-native": "~13.2.0",
     "@types/react": "~18.3.12",
     "expo": "~53.0.9",
     "expo-module-scripts": "^4.0.2",

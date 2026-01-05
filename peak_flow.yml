@@ -1,5 +1,5 @@
 before_script:
   - npm install
 script:
-  - npm run test
+  - npm run test:system
   - npm run lint
