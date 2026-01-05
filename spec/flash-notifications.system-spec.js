@@ -27,4 +27,20 @@ describe("Flash notifications", () => {
 
     })
   })
+
+  it("auto dismisses a notification after a delay", async () => {
+    await SystemTest.run(async (systemTest) => {
+      await systemTest.visit("/")
+
+      const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
+      await systemTest.click(triggerButton)
+
+      const notificationMessage = await systemTest.findByTestID("flash-notifications/notification-1/message", {useBaseSelector: false})
+      const notificationText = await notificationMessage.getText()
+      expect(notificationText).toEqual("Dismiss me")
+
+      await new Promise((resolve) => setTimeout(resolve, 4500))
+      await systemTest.expectNoElement("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
+    })
+  })
 })
