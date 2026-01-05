@@ -1,39 +1,35 @@
-import { useEvent } from 'expo';
-import FlashNotifications, { FlashNotificationsView } from 'flash-notifications';
-import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { Container, FlashNotifications } from 'flash-notifications';
+import { Pressable, SafeAreaView, ScrollView, Text, View } from 'react-native';
+import useSystemTest from 'system-testing/build/use-system-test.js';
 
 export default function App() {
-  const onChangePayload = useEvent(FlashNotifications, 'onChange');
+  useSystemTest();
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
-        <Group name="Constants">
-          <Text>{FlashNotifications.PI}</Text>
-        </Group>
-        <Group name="Functions">
-          <Text>{FlashNotifications.hello()}</Text>
-        </Group>
-        <Group name="Async functions">
-          <Button
-            title="Set value"
-            onPress={async () => {
-              await FlashNotifications.setValueAsync('Hello from JS!');
-            }}
-          />
-        </Group>
-        <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
-        </Group>
-        <Group name="Views">
-          <FlashNotificationsView
-            url="https://www.example.com"
-            onLoad={({ nativeEvent: { url } }) => console.log(`Loaded: ${url}`)}
-            style={styles.view}
-          />
-        </Group>
-      </ScrollView>
+      <View
+        style={styles.container}
+        testID="systemTestingComponent"
+        // @ts-expect-error dataSet is supported at runtime for React Native Web
+        dataSet={{ focussed: 'true' }}
+      >
+        <Text testID="blankText" style={styles.blankText}>
+          Blank
+        </Text>
+        <ScrollView style={styles.container}>
+          <Text style={styles.header}>Flash notifications example</Text>
+          <Group name="System test">
+            <Pressable
+              onPress={() => FlashNotifications.success('Dismiss me')}
+              style={styles.testButton}
+              testID="flashNotifications/showNotification"
+            >
+              <Text style={styles.testButtonText}>Show notification</Text>
+            </Pressable>
+          </Group>
+        </ScrollView>
+        <Container />
+      </View>
     </SafeAreaView>
   );
 }
@@ -66,8 +62,18 @@ const styles = {
     flex: 1,
     backgroundColor: '#eee',
   },
-  view: {
-    flex: 1,
-    height: 200,
+  testButton: {
+    backgroundColor: '#111',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  testButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  blankText: {
+    marginLeft: 20,
+    marginTop: 8,
   },
 };
