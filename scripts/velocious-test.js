@@ -2,6 +2,9 @@ import Configuration from "velocious/build/src/configuration.js"
 import NodeEnvironmentHandler from "velocious/build/src/environment-handlers/node.js"
 import TestFilesFinder from "velocious/build/src/testing/test-files-finder.js"
 import TestRunner from "velocious/build/src/testing/test-runner.js"
+import fs from "node:fs/promises"
+import {execFileSync} from "node:child_process"
+import path from "node:path"
 
 const INCLUDE_TAG_FLAGS = new Set(["--tag", "--include-tag", "-t"])
 const EXCLUDE_TAG_FLAGS = new Set(["--exclude-tag", "--skip-tag", "-x"])
@@ -86,6 +89,13 @@ const parseTagFilters = (processArgs) => {
 
 const main = async () => {
   const processArgs = process.argv.slice(2)
+
+  const distPath = path.join(process.cwd(), "example", "dist")
+  try {
+    await fs.stat(distPath)
+  } catch {
+    execFileSync("npm", ["run", "export:web"], {stdio: "inherit"})
+  }
 
   const environmentHandler = new NodeEnvironmentHandler()
   const configuration = new Configuration({
