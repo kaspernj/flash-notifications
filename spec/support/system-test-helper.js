@@ -5,7 +5,8 @@ import wait from "awaitery/build/wait.js"
 import SystemTest from "system-testing/build/system-test.js"
 import DummyHttpServerEnvironment from "./dummy-http-server.js"
 
-const sharedState = globalThis.__systemTestHelperState ??= {
+const globalState = /** @type {any} */ (globalThis)
+const sharedState = globalState.__systemTestHelperState ??= {
   refCount: 0,
   started: false,
   /** @type {SystemTest | undefined} */
