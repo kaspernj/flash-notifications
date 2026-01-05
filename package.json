@@ -7,7 +7,7 @@
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
-    "export:web": "npm run prepare:dummy && cd example && expo export -p web --output-dir dist",
+    "export:web": "cd example && npm install && cd .. && npm run prepare:dummy && cd example && npx expo export -p web --output-dir dist",
     "lint": "expo-module lint -- --max-warnings 0",
     "test": "node scripts/velocious-test.js",
     "prepare": "expo-module prepare",
