@@ -17,7 +17,7 @@ describe("Flash notifications", () => {
       const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
       await systemTest.click(triggerButton)
 
-      const notificationMessage = await systemTest.findByTestID("flash-notifications/notification-1/message", {useBaseSelector: false})
+      const notificationMessage = await systemTest.findByTestID("notification-message", {useBaseSelector: false})
       const notificationText = await notificationMessage.getText()
       expect(notificationText).toEqual("Dismiss me")
       const notificationContainer = await systemTest.findByTestID("flash-notifications-notification", {useBaseSelector: false})
@@ -35,12 +35,12 @@ describe("Flash notifications", () => {
       const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
       await systemTest.click(triggerButton)
 
-      const notificationMessage = await systemTest.findByTestID("flash-notifications/notification-1/message", {useBaseSelector: false})
+      const notificationMessage = await systemTest.findByTestID("notification-message", {useBaseSelector: false})
       const notificationText = await notificationMessage.getText()
       expect(notificationText).toEqual("Dismiss me")
 
       await new Promise((resolve) => setTimeout(resolve, 4500))
-      await systemTest.expectNoElement("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
+      await systemTest.expectNoElement("[data-testid='notification-message']", {useBaseSelector: false})
     })
   })
 })
