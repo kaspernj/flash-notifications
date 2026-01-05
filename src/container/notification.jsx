@@ -1,13 +1,12 @@
 import PropTypes from "prop-types"
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
-import {Pressable, StyleSheet, Text, View} from "react-native"
+import {Animated, Pressable, StyleSheet, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import useStyles from "@kaspernj/api-maker/build/use-styles.js"
 
 const styles = StyleSheet.create({
   view: {
-    marginBottom: 15,
     padding: 15,
     borderRadius: 11,
     cursor: "pointer"
@@ -49,6 +48,7 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
     count: PropTypes.number.isRequired,
     message: PropTypes.string.isRequired,
     notification: PropTypes.object.isRequired,
+    onMeasured: PropTypes.func.isRequired,
     onRemovedClicked: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
@@ -74,20 +74,47 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
     )
 
     return (
-      <Pressable dataSet={pressableDataSet} onPress={this.tt.onRemovedClicked} style={viewStyles} testID="flash-notifications-notification">
-        <View style={styles.titleview} testID="notification-title">
-          <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
-            {title}
-          </Text>
-        </View>
-        <View testID="notification-message">
-          <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
-            {message}
-          </Text>
-        </View>
-      </Pressable>
+      <Animated.View style={this.tt.wrapperStyle}>
+        <Pressable
+          dataSet={pressableDataSet}
+          onLayout={this.tt.onLayout}
+          onPress={this.tt.onRemovedClicked}
+          style={viewStyles}
+          testID="flash-notifications-notification"
+        >
+          <View style={styles.titleview} testID="notification-title">
+            <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
+              {title}
+            </Text>
+          </View>
+          <View testID="notification-message">
+            <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
+              {message}
+            </Text>
+          </View>
+        </Pressable>
+      </Animated.View>
     )
   }
 
+  get wrapperStyle() {
+    const {notification} = this.p
+
+    return {
+      height: notification.measuredHeight ? notification.height : undefined,
+      marginBottom: notification.marginBottom,
+      opacity: notification.opacity,
+      overflow: "hidden"
+    }
+  }
+
   onRemovedClicked = () => this.p.onRemovedClicked(this.p.notification)
+
+  onLayout = (event) => {
+    const {notification} = this.p
+
+    if (!notification.measuredHeight) {
+      this.p.onMeasured(notification, event.nativeEvent.layout.height)
+    }
+  }
 }))

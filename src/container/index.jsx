@@ -8,7 +8,7 @@ import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-comp
 import useBreakpoint from "@kaspernj/api-maker/build/use-breakpoint.js"
 import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter.js"
 import useEnvSense from "env-sense/build/use-env-sense.js"
-import {View} from "react-native"
+import {Animated, View} from "react-native"
 
 import events from "../events.js"
 import Notification from "./notification"
@@ -28,6 +28,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
   /** @type {number[]} */
   timeouts = []
+  notificationSpacing = 15
 
   setup() {
     this.useStates({
@@ -95,6 +96,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
             key={`notification-${notification.count}`}
             message={notification.message}
             notification={notification}
+            onMeasured={this.onNotificationMeasured}
             onRemovedClicked={this.onRemovedClicked}
             title={notification.title}
             type={notification.type}
@@ -110,13 +112,19 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
    */
   onPushNotification = (detail) => {
     const count = this.s.count + 1
-    const timeout = setTimeout(() => this.removeNotification(count), 4000)
+    const timeout = setTimeout(() => this.dismissNotificationByCount(count), 4000)
 
     this.timeouts.push(timeout)
 
     const notification = {
       count,
+      height: new Animated.Value(0),
+      marginBottom: new Animated.Value(this.notificationSpacing),
+      measuredHeight: undefined,
       message: digg(detail, "message"),
+      opacity: new Animated.Value(1),
+      removing: false,
+      timeout,
       title: digg(detail, "title"),
       type: digg(detail, "type")
     }
@@ -124,11 +132,41 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     this.setState({count, notifications: this.s.notifications.concat([notification])})
   }
 
-  onRemovedClicked = (notification) => this.removeNotification(digg(notification, "count"))
+  onRemovedClicked = (notification) => this.dismissNotification(notification)
 
-  removeNotification = (count) => {
-    this.setState({
-      notifications: this.s.notifications.filter((notification) => notification.count != count)
+  onNotificationMeasured = (notification, measuredHeight) => {
+    if (notification.measuredHeight) return
+
+    notification.measuredHeight = measuredHeight
+    notification.height.setValue(measuredHeight)
+    this.setState({notifications: [...this.s.notifications]})
+  }
+
+  dismissNotificationByCount = (count) => {
+    const notification = this.s.notifications.find((item) => item.count == count)
+    if (!notification) return
+    this.dismissNotification(notification)
+  }
+
+  dismissNotification = (notification) => {
+    if (notification.removing) return
+    notification.removing = true
+    if (notification.timeout) clearTimeout(notification.timeout)
+
+    if (!notification.measuredHeight) {
+      notification.measuredHeight = 1
+      notification.height.setValue(1)
+      this.setState({notifications: [...this.s.notifications]})
+    }
+
+    Animated.parallel([
+      Animated.timing(notification.opacity, {toValue: 0, duration: 200, useNativeDriver: false}),
+      Animated.timing(notification.height, {toValue: 0, duration: 200, useNativeDriver: false}),
+      Animated.timing(notification.marginBottom, {toValue: 0, duration: 200, useNativeDriver: false})
+    ]).start(() => {
+      this.setState({
+        notifications: this.s.notifications.filter((item) => item.count != notification.count)
+      })
     })
   }
 }))

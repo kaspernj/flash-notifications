@@ -17,7 +17,7 @@ describe("Flash notifications", () => {
       const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
       await systemTest.click(triggerButton)
 
-      const notificationMessage = await systemTest.findByTestID("flash-notifications/notification-1/message", {useBaseSelector: false})
+      const notificationMessage = await systemTest.findByTestID("notification-message", {useBaseSelector: false})
       const notificationText = await notificationMessage.getText()
       expect(notificationText).toEqual("Dismiss me")
       const notificationContainer = await systemTest.findByTestID("flash-notifications-notification", {useBaseSelector: false})
@@ -25,6 +25,22 @@ describe("Flash notifications", () => {
       await systemTest.click(notificationContainer)
       await systemTest.waitForNoSelector("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
 
+    })
+  })
+
+  it("auto dismisses a notification after a delay", async () => {
+    await SystemTest.run(async (systemTest) => {
+      await systemTest.visit("/")
+
+      const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
+      await systemTest.click(triggerButton)
+
+      const notificationMessage = await systemTest.findByTestID("notification-message", {useBaseSelector: false})
+      const notificationText = await notificationMessage.getText()
+      expect(notificationText).toEqual("Dismiss me")
+
+      await new Promise((resolve) => setTimeout(resolve, 4500))
+      await systemTest.expectNoElement("[data-testid='notification-message']", {useBaseSelector: false})
     })
   })
 })
