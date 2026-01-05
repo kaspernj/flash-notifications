@@ -3,6 +3,7 @@
 import "velocious/build/src/testing/test.js"
 import SystemTest from "system-testing/build/system-test.js"
 import SystemTestHelper from "./support/system-test-helper.js"
+import wait from "awaitery/build/wait.js"
 
 SystemTest.rootPath = "/?systemTest=true"
 
@@ -23,8 +24,7 @@ describe("Flash notifications", () => {
       const notificationContainer = await systemTest.findByTestID("flash-notifications-notification", {useBaseSelector: false})
 
       await systemTest.click(notificationContainer)
-      await systemTest.waitForNoSelector("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
-
+      await systemTest.expectNoElement("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
     })
   })
 
@@ -39,7 +39,7 @@ describe("Flash notifications", () => {
       const notificationText = await notificationMessage.getText()
       expect(notificationText).toEqual("Dismiss me")
 
-      await new Promise((resolve) => setTimeout(resolve, 4500))
+      await wait(4500)
       await systemTest.expectNoElement("[data-testid='notification-message']", {useBaseSelector: false})
     })
   })

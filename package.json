@@ -32,6 +32,7 @@
   "license": "MIT",
   "homepage": "https://github.com/kaspernj/flash-notifications#readme",
   "dependencies": {
+    "awaitery": "^1.0.10",
     "diggerize": "^1.0.9",
     "env-sense": "^1.0.2",
     "eventemitter3": "^5.0.1",
