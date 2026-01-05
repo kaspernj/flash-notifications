@@ -7,10 +7,13 @@
   "scripts": {
     "build": "expo-module build",
     "clean": "expo-module clean",
+    "export:web": "npm run prepare:dummy && cd example && expo export -p web --output-dir dist",
     "lint": "expo-module lint -- --max-warnings 0",
     "test": "jest --detectOpenHandles",
+    "test:system": "node scripts/velocious-test.js",
     "test-expo": "expo-module test",
     "prepare": "expo-module prepare",
+    "prepare:dummy": "npm run build && rm -rf example/node_modules/flash-notifications && mkdir -p example/node_modules/flash-notifications && cp -r build package.json example/node_modules/flash-notifications/",
     "prepublishOnly": "expo-module prepublishOnly",
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
@@ -48,7 +51,10 @@
     "@types/react": "~18.3.12",
     "expo": "~53.0.9",
     "expo-module-scripts": "^4.0.2",
-    "react-native": "~0.76.9"
+    "react-native": "~0.76.9",
+    "selenium-webdriver": "^4.35.0",
+    "system-testing": "^1.0.56",
+    "velocious": "^1.0.175"
   },
   "peerDependencies": {
     "@kaspernj/api-maker": ">= 1.0.2058",

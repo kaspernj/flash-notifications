@@ -74,18 +74,16 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
     )
 
     return (
-      <Pressable dataSet={pressableDataSet} onPress={this.tt.onRemovedClicked} testID="flash-notifications-notification">
-        <View style={viewStyles}>
-          <View style={styles.titleview} testID="notification-title">
-            <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
-              {title}
-            </Text>
-          </View>
-          <View testID="notification-message">
-            <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
-              {message}
-            </Text>
-          </View>
+      <Pressable dataSet={pressableDataSet} onPress={this.tt.onRemovedClicked} style={viewStyles} testID="flash-notifications-notification">
+        <View style={styles.titleview} testID="notification-title">
+          <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
+            {title}
+          </Text>
+        </View>
+        <View testID="notification-message">
+          <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
+            {message}
+          </Text>
         </View>
       </Pressable>
     )
