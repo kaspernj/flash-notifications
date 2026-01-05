@@ -18,10 +18,10 @@ const splitTags = (value) => {
 const parseTagFilters = (processArgs) => {
   const includeTags = []
   const excludeTags = []
-  const filteredProcessArgs = processArgs.length > 0 ? [processArgs[0]] : []
+  const filteredProcessArgs = []
   let inRestArgs = false
 
-  for (let i = 1; i < processArgs.length; i++) {
+  for (let i = 0; i < processArgs.length; i++) {
     const arg = processArgs[i]
 
     if (arg === "--") {
