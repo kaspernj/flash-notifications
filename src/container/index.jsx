@@ -10,6 +10,7 @@ import useEventEmitter from "@kaspernj/api-maker/build/use-event-emitter.js"
 import useEnvSense from "env-sense/build/use-env-sense.js"
 import {Animated, View} from "react-native"
 
+import debugLog from "../debug.js"
 import events from "../events.js"
 import Notification from "./notification"
 
@@ -112,7 +113,10 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
    */
   onPushNotification = (detail) => {
     const count = this.s.count + 1
-    const timeout = setTimeout(() => this.dismissNotificationByCount(count), 4000)
+    const timeout = setTimeout(() => {
+      debugLog("FlashNotifications: notification timeout", {id: count})
+      this.dismissNotificationByCount(count, "timeout")
+    }, 4000)
 
     this.timeouts.push(timeout)
 
@@ -129,44 +133,80 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       type: digg(detail, "type")
     }
 
+    debugLog("FlashNotifications: notification added", {
+      id: count,
+      title: notification.title,
+      type: notification.type
+    })
+
     this.setState({count, notifications: this.s.notifications.concat([notification])})
   }
 
-  onRemovedClicked = (notification) => this.dismissNotification(notification)
+  onRemovedClicked = (notification) => {
+    debugLog("FlashNotifications: notification pressed", {id: notification.count})
+    this.dismissNotification(notification, "press")
+  }
 
   onNotificationMeasured = (notification, measuredHeight) => {
     if (notification.measuredHeight) return
+
+    debugLog("FlashNotifications: notification measured", {id: notification.count, height: measuredHeight})
 
     notification.measuredHeight = measuredHeight
     notification.height.setValue(measuredHeight)
     this.setState({notifications: [...this.s.notifications]})
   }
 
-  dismissNotificationByCount = (count) => {
+  dismissNotificationByCount = (count, reason = "unknown") => {
     const notification = this.s.notifications.find((item) => item.count == count)
-    if (!notification) return
-    this.dismissNotification(notification)
+    if (!notification) {
+      debugLog("FlashNotifications: notification not found", {id: count, reason})
+      return
+    }
+
+    this.dismissNotification(notification, reason)
   }
 
-  dismissNotification = (notification) => {
-    if (notification.removing) return
+  dismissNotification = (notification, reason = "unknown") => {
+    if (notification.removing) {
+      debugLog("FlashNotifications: notification already removing", {id: notification.count, reason})
+      return
+    }
+
     notification.removing = true
     if (notification.timeout) clearTimeout(notification.timeout)
 
     if (!notification.measuredHeight) {
+      debugLog("FlashNotifications: notification missing measured height", {id: notification.count})
       notification.measuredHeight = 1
       notification.height.setValue(1)
       this.setState({notifications: [...this.s.notifications]})
     }
+
+    debugLog("FlashNotifications: animations begin", {
+      id: notification.count,
+      animations: ["opacity", "height", "marginBottom"],
+      reason
+    })
+    debugLog("FlashNotifications: fade animation begin", {id: notification.count, reason})
 
     Animated.parallel([
       Animated.timing(notification.opacity, {toValue: 0, duration: 200, useNativeDriver: false}),
       Animated.timing(notification.height, {toValue: 0, duration: 200, useNativeDriver: false}),
       Animated.timing(notification.marginBottom, {toValue: 0, duration: 200, useNativeDriver: false})
     ]).start(() => {
+      debugLog("FlashNotifications: animations end", {
+        id: notification.count,
+        animations: ["opacity", "height", "marginBottom"],
+        reason
+      })
+      debugLog("FlashNotifications: fade animation end", {id: notification.count, reason})
+
       this.setState({
         notifications: this.s.notifications.filter((item) => item.count != notification.count)
       })
+
+      debugLog("FlashNotifications: notification removed", {id: notification.count, reason})
     })
   }
 }))
