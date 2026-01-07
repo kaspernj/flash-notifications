@@ -24,7 +24,7 @@ describe("Flash notifications", () => {
       const notificationContainer = await systemTest.findByTestID("flash-notifications-notification", {useBaseSelector: false})
 
       await systemTest.click(notificationContainer)
-      await systemTest.expectNoElement("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
+      await systemTest.waitForNoSelector("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
     })
   })
 
@@ -40,7 +40,7 @@ describe("Flash notifications", () => {
       expect(notificationText).toEqual("Dismiss me")
 
       await wait(4500)
-      await systemTest.expectNoElement("[data-testid='notification-message']", {useBaseSelector: false})
+      await systemTest.waitForNoSelector("[data-testid='notification-message']", {useBaseSelector: false})
     })
   })
 })
