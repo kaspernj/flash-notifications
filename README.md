@@ -1,35 +1,77 @@
 # flash-notifications
 
-My new module
+Flash notifications for React Native and Expo, with a lightweight container component and a simple API for triggering alerts.
 
-# API documentation
-
-- [Documentation for the latest stable release](https://docs.expo.dev/versions/latest/sdk/flash-notifications/)
-- [Documentation for the main branch](https://docs.expo.dev/versions/unversioned/sdk/flash-notifications/)
-
-# Installation in managed Expo projects
-
-For [managed](https://docs.expo.dev/archive/managed-vs-bare/) Expo projects, please follow the installation instructions in the [API documentation for the latest stable release](#api-documentation). If you follow the link and there is no documentation available then this library is not yet usable within managed projects &mdash; it is likely to be included in an upcoming Expo SDK release.
-
-# Installation in bare React Native projects
-
-For bare React Native projects, you must ensure that you have [installed and configured the `expo` package](https://docs.expo.dev/bare/installing-expo-modules/) before continuing.
-
-### Add the package to your npm dependencies
+## Installation
 
 ```
 npm install flash-notifications
 ```
 
-### Configure for Android
+For managed Expo projects, ensure your Expo SDK supports this module and follow the Expo install guidance for modules. For bare React Native projects, install and configure the `expo` package before continuing.
 
+## Setup
 
+Render the notification container once near the root of your app.
 
+```jsx
+import React from "react"
+import {SafeAreaProvider, useSafeAreaInsets} from "react-native-safe-area-context"
+import {Container} from "flash-notifications"
 
-### Configure for iOS
+const NotificationsContainer = () => {
+  const insets = useSafeAreaInsets()
 
-Run `npx pod-install` after installing the npm package.
+  return <Container insets={insets} />
+}
 
-# Contributing
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <NotificationsContainer />
+    </SafeAreaProvider>
+  )
+}
+```
 
-Contributions are very welcome! Please refer to guidelines described in the [contributing guide]( https://github.com/expo/expo#contributing).
+## Usage
+
+Trigger notifications anywhere in your app with the static helpers.
+
+```js
+import {FlashNotifications} from "flash-notifications"
+
+FlashNotifications.success("Saved successfully.")
+FlashNotifications.error("Something went wrong.")
+FlashNotifications.alert("Please check your input.")
+```
+
+If you need a custom type, you can use `show` directly.
+
+```js
+import {FlashNotifications} from "flash-notifications"
+
+FlashNotifications.show({type: "info", text: "Heads up!"})
+```
+
+## Debug mode
+
+Enable debug logging by setting the configuration flag at startup.
+
+```js
+import {configuration} from "flash-notifications"
+
+configuration.debug = true
+```
+
+When enabled, the library logs lifecycle events such as notification creation, press, timeout, measurement, animation start/end, and removal, along with the notification ID.
+
+## API documentation
+
+- Latest stable release: https://docs.expo.dev/versions/latest/sdk/flash-notifications/
+- Main branch: https://docs.expo.dev/versions/unversioned/sdk/flash-notifications/
+
+## Contributing
+
+Contributions are welcome. Please refer to the Expo contributing guide:
+https://github.com/expo/expo#contributing
