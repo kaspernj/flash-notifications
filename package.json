@@ -5,7 +5,10 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
-    "build"
+    "android",
+    "build",
+    "expo-module.config.json",
+    "ios"
   ],
   "scripts": {
     "build": "expo-module build",

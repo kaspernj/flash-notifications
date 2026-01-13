@@ -11,3 +11,4 @@
 - Switch to responsive-breakpoints for breakpoint handling.
 - Switch useEventEmitter import to ya-use-event-emitter.
 - Remove @kaspernj/api-maker peer dependency.
+- Publish native sources and Expo module config in package files list.
