@@ -190,10 +190,12 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     })
     debugLog("FlashNotifications: fade animation begin", {id: notification.count, reason})
 
+    const dismissDuration = reason === "press" ? 80 : 200
+
     Animated.parallel([
-      Animated.timing(notification.opacity, {toValue: 0, duration: 200, useNativeDriver: false}),
-      Animated.timing(notification.height, {toValue: 0, duration: 200, useNativeDriver: false}),
-      Animated.timing(notification.marginBottom, {toValue: 0, duration: 200, useNativeDriver: false})
+      Animated.timing(notification.opacity, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
+      Animated.timing(notification.height, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
+      Animated.timing(notification.marginBottom, {toValue: 0, duration: dismissDuration, useNativeDriver: false})
     ]).start(() => {
       debugLog("FlashNotifications: animations end", {
         id: notification.count,
