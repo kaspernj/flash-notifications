@@ -1,46 +1,12 @@
 import PropTypes from "prop-types"
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
-import {Animated, Pressable, StyleSheet, Text, View} from "react-native"
+import {Animated, Pressable, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
-import useStyles from "@kaspernj/api-maker/build/use-styles.js"
+import useBreakpoint from "@kaspernj/api-maker/build/use-breakpoint.js"
 
-const styles = StyleSheet.create({
-  view: {
-    padding: 15,
-    borderRadius: 11,
-    cursor: "pointer"
-  },
-  viewSmDown: {
-    width: "100%"
-  },
-  viewMdUp: {
-    width: 300,
-    maxWidth: "100%"
-  },
-  viewError: {
-    border: "1px solid rgba(161, 34, 32, 0.95)",
-    backgroundColor: "rgba(161, 34, 32, 0.87)"
-  },
-  viewSuccess: {
-    border: "1px solid rgba(0, 0, 0, 0.95)",
-    backgroundColor: "rgba(0, 0, 0, 0.87)"
-  },
-  viewAlert: {
-    border: "1px solid rgba(204, 51, 0, 0.95)",
-    backgroundColor: "rgba(204, 51, 0, 0.87)"
-  },
-  titleview: {
-    marginBottom: 5
-  },
-  titleText: {
-    color: "#fff",
-    fontWeight: "bold"
-  },
-  messageText: {
-    color: "#fff"
-  }
-})
+const dataSets = {}
+const styles = {}
 
 export default memo(shapeComponent(class FlashNotificationsNotification extends ShapeComponent {
   static propTypes = PropTypesExact({
@@ -57,12 +23,7 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
   render() {
     const {count, message, title, type} = this.p
     const {className} = this.props
-
-    const viewStyles = useStyles(styles, ["view", {
-      viewError: type == "error",
-      viewSuccess: type == "success",
-      viewAlert: type == "alert"
-    }])
+    const breakpoint = useBreakpoint()
 
     const pressableDataSet = useMemo(
       () => ({
@@ -79,16 +40,65 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
           dataSet={pressableDataSet}
           onLayout={this.tt.onLayout}
           onPress={this.tt.onRemovedClicked}
-          style={viewStyles}
+          style={styles[`pressable-${type}-${breakpoint.smDown}-${breakpoint.mdUp}`] ||= {
+            padding: 15,
+            borderRadius: 11,
+            cursor: "pointer",
+            width: (() => {
+              if (breakpoint.smDown) {
+                return "100%"
+              } else if (breakpoint.mdUp) {
+                return 300
+              }
+            })(),
+            maxWidth: (() => {
+              if (breakpoint.mdUp) {
+                return "100%"
+              }
+            })(),
+            border: (() => {
+              if (type == "error") {
+                return "1px solid rgba(161, 34, 32, 0.95)"
+              } else if (type == "success") {
+                return "1px solid rgba(0, 0, 0, 0.95)"
+              } else if (type == "alert") {
+                return "1px solid rgba(204, 51, 0, 0.95)"
+              }
+            })(),
+            backgroundColor: (() => {
+              if (type == "error") {
+                return "rgba(161, 34, 32, 0.87)"
+              } else if (type == "success") {
+                return "rgba(0, 0, 0, 0.87)"
+              } else if (type == "alert") {
+                return "rgba(204, 51, 0, 0.87)"
+              }
+            })()
+          }}
           testID="flash-notifications-notification"
         >
-          <View style={styles.titleview} testID="notification-title">
-            <Text style={styles.titleText} testID={`flash-notifications/notification-${count}/title`}>
+          <View
+            style={styles.titleView ||= {marginBottom: 5}}
+            testID="notification-title"
+          >
+            <Text
+              style={styles.titleText ||= {
+                color: "#fff",
+                fontWeight: 700
+              }}
+              testID={`flash-notifications/notification-${count}/title`}
+            >
               {title}
             </Text>
           </View>
-          <View testID="notification-message">
-            <Text style={styles.messageText} testID={`flash-notifications/notification-${count}/message`}>
+          <View
+            dataSet={dataSets[`notificationMessage-${count}`] ||= {count: `${count}`}}
+            testID="notification-message"
+          >
+            <Text
+              style={styles.messageText ||= {color: "#fff"}}
+              testID={`flash-notifications/notification-${count}/message`}
+            >
               {message}
             </Text>
           </View>
