@@ -8,3 +8,5 @@
 - Cache inline notification style objects and use numeric font weights.
 - Inline cached style assignments directly in notification JSX.
 - Build pressable styles with a single cached inline object.
+- Switch to responsive-breakpoints for breakpoint handling.
+- Switch useEventEmitter import to ya-use-event-emitter.

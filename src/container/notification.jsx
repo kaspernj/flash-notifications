@@ -3,7 +3,7 @@ import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
 import {Animated, Pressable, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
-import useBreakpoint from "@kaspernj/api-maker/build/use-breakpoint.js"
+import {useBreakpoint} from "responsive-breakpoints"
 
 const dataSets = {}
 const styles = {}
