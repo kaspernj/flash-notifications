@@ -12,3 +12,5 @@
 - Switch useEventEmitter import to ya-use-event-emitter.
 - Remove @kaspernj/api-maker peer dependency.
 - Publish native sources and Expo module config in package files list.
+- Bump system-testing dev dependency to 1.0.62.
+- Bump example app system-testing dev dependency to 1.0.62.
