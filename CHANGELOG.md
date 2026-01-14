@@ -14,3 +14,4 @@
 - Publish native sources and Expo module config in package files list.
 - Bump system-testing dev dependency to 1.0.62.
 - Bump example app system-testing dev dependency to 1.0.62.
+- Expand README with container placement, API, and configuration details.
