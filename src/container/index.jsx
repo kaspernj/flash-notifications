@@ -10,12 +10,13 @@ import {useBreakpoint} from "responsive-breakpoints"
 // @ts-expect-error No published types for this package.
 import useEventEmitter from "ya-use-event-emitter"
 import useEnvSense from "env-sense/build/use-env-sense.js"
-import * as ReactNative from "react-native"
+import {Animated, View} from "react-native"
 
 import debugLog from "../debug.js"
 import events from "../events.js"
 import FlashNotification from "./notification"
 
+void View
 void FlashNotification
 
 /**
@@ -102,7 +103,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     }, [isNative, smDown, mdUp, insets.top, insets.right, insets.left])
 
     return (
-      <ReactNative.View
+      <View
         // @ts-expect-error
         dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
         // @ts-expect-error React Native types do not include the web-only "fixed" position.
@@ -121,7 +122,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
             type={notification.type}
           />
         )}
-      </ReactNative.View>
+      </View>
     )
   }
 
@@ -141,11 +142,11 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     /** @type {StoredNotificationType} */
     const notification = {
       count,
-      height: new ReactNative.Animated.Value(0),
-      marginBottom: new ReactNative.Animated.Value(this.notificationSpacing),
+      height: new Animated.Value(0),
+      marginBottom: new Animated.Value(this.notificationSpacing),
       measuredHeight: undefined,
       message: digg(detail, "message"),
-      opacity: new ReactNative.Animated.Value(1),
+      opacity: new Animated.Value(1),
       removing: false,
       timeout,
       title: digg(detail, "title"),
@@ -233,10 +234,10 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
     const dismissDuration = reason === "press" ? 80 : 200
 
-    ReactNative.Animated.parallel([
-      ReactNative.Animated.timing(notification.opacity, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
-      ReactNative.Animated.timing(notification.height, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
-      ReactNative.Animated.timing(notification.marginBottom, {toValue: 0, duration: dismissDuration, useNativeDriver: false})
+    Animated.parallel([
+      Animated.timing(notification.opacity, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
+      Animated.timing(notification.height, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
+      Animated.timing(notification.marginBottom, {toValue: 0, duration: dismissDuration, useNativeDriver: false})
     ]).start(() => {
       debugLog("FlashNotifications: animations end", {
         id: notification.count,
