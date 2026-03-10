@@ -53,7 +53,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       notifications: []
     })
 
-    useEventEmitter(events, "pushNotification", this.onPushNotificationEvent)
+    useEventEmitter(events, "pushNotification", this.onPushNotification)
     useEffect(() => {
       return () => {
         for (const timeout of this.timeouts) {
@@ -129,15 +129,15 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
    * @param {...unknown} args
    * @returns {void}
    */
-  onPushNotificationEvent = (...args) => {
-    this.onPushNotification(/** @type {NotificationObjectType} */ (args[0]))
+  onPushNotification = (...args) => {
+    this.pushNotification(/** @type {NotificationObjectType} */ (args[0]))
   }
 
   /**
    * @param {NotificationObjectType} detail
    * @returns {void}
    */
-  onPushNotification = (detail) => {
+  pushNotification = (detail) => {
     const count = this.s.count + 1
     const timeout = setTimeout(() => {
       debugLog("FlashNotifications: notification timeout", {id: count})
