@@ -12,7 +12,7 @@ For managed Expo projects, ensure your Expo SDK supports this module and follow 
 
 ## Setup
 
-Render the notification container once near the root of your app.
+Render the notification container once near the root of your app so it can listen for events globally.
 
 ```jsx
 import React from "react"
@@ -34,6 +34,17 @@ export default function App() {
 }
 ```
 
+If you are not using safe-area insets, render the container directly:
+
+```jsx
+import React from "react"
+import {Container} from "flash-notifications"
+
+export default function App() {
+  return <Container />
+}
+```
+
 ## Usage
 
 Trigger notifications anywhere in your app with the static helpers.
@@ -52,6 +63,49 @@ If you need a custom type, you can use `show` directly.
 import {FlashNotifications} from "flash-notifications"
 
 FlashNotifications.show({type: "info", text: "Heads up!"})
+```
+
+## API
+
+### FlashNotifications
+
+`FlashNotifications.alert(message)`
+Shows an alert notification with a localized "Alert" title.
+
+`FlashNotifications.error(message)`
+Shows an error notification with a localized "Error" title.
+
+`FlashNotifications.success(message)`
+Shows a success notification with a localized "Success" title.
+
+`FlashNotifications.show({type, text})`
+Shows a notification with a localized title based on `type`. Unknown types fall back to the localized "Notification" title.
+
+`FlashNotifications.errorResponse(error)`
+Handles Api Maker validation and base errors, converting them into notifications. Unknown errors are logged and rethrown.
+
+Notifications auto-dismiss after 4 seconds and can be dismissed immediately by pressing them.
+
+### Container
+
+`<Container insets={insets} />`
+Optional `insets` should be an object with `top`, `right`, and `left` values (for example, from `react-native-safe-area-context`). The container positions itself near the top-right on larger screens and spans the width on small screens.
+
+## Configuration
+
+`configuration.debug`
+When `true`, logs lifecycle events such as add/remove, timeout, measurement, and animation events.
+
+`configuration.translate(msgId, {defaultValue})`
+Controls localized titles for built-in types. The default implementation returns `defaultValue` or `msgId`.
+
+You can override configuration by mutating the exported object or setting a global before imports:
+
+```js
+globalThis.flashNotificationsConfiguration = {
+  debug: false,
+  translate: (msgId, args) => args?.defaultValue || msgId
+}
 ```
 
 ## Debug mode

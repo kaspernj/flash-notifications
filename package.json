@@ -52,7 +52,7 @@
     "expo-module-scripts": "^4.0.2",
     "react-native": "~0.76.9",
     "selenium-webdriver": "^4.35.0",
-    "system-testing": "^1.0.61",
+    "system-testing": "^1.0.62",
     "velocious": "^1.0.183"
   },
   "peerDependencies": {
