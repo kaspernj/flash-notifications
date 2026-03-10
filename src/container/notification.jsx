@@ -1,7 +1,6 @@
 import PropTypes from "prop-types"
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
-import {Animated, Pressable, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
 
