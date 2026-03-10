@@ -7,7 +7,6 @@ import propTypesExact from "prop-types-exact"
 import React, {memo, useEffect, useMemo} from "react"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
-// @ts-expect-error No published types for this package.
 import useEventEmitter from "ya-use-event-emitter"
 import useEnvSense from "env-sense/build/use-env-sense.js"
 import {Animated, View} from "react-native"
@@ -54,7 +53,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       notifications: []
     })
 
-    useEventEmitter(events, "pushNotification", this.onPushNotification)
+    useEventEmitter(events, "pushNotification", this.onPushNotificationEvent)
     useEffect(() => {
       return () => {
         for (const timeout of this.timeouts) {
@@ -124,6 +123,14 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
         )}
       </View>
     )
+  }
+
+  /**
+   * @param {...unknown} args
+   * @returns {void}
+   */
+  onPushNotificationEvent = (...args) => {
+    this.onPushNotification(/** @type {NotificationObjectType} */ (args[0]))
   }
 
   /**
