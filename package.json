@@ -14,6 +14,7 @@
     "lint": "expo-module lint -- --max-warnings 0",
     "prepare:module": "expo-module prepare",
     "test": "node scripts/velocious-test.js",
+    "typecheck": "expo-module build",
     "prepare:dummy": "npm run build && rm -rf example/node_modules/flash-notifications && mkdir -p example/node_modules/flash-notifications && cp -r build package.json example/node_modules/flash-notifications/",
     "prepublishOnly": "npm run prepare:module && expo-module prepublishOnly",
     "expo-module": "expo-module",
