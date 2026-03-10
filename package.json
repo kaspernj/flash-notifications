@@ -48,7 +48,7 @@
     "@types/react": "~18.3.12",
     "eslint": "^8.57.1",
     "eslint-config-universe": "^15.0.3",
-    "expo": "~54.0.30",
+    "expo": "~55.0.5",
     "expo-module-scripts": "^4.0.2",
     "react-native": "~0.76.9",
     "selenium-webdriver": "^4.35.0",
