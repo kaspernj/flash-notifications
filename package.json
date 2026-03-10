@@ -45,11 +45,12 @@
     "ya-use-event-emitter": "^0.1.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.4",
     "@types/react": "~18.3.12",
     "eslint": "^10.0.3",
-    "eslint-config-universe": "^15.0.3",
     "expo": "~55.0.5",
     "expo-module-scripts": "^4.0.2",
+    "globals": "^16.4.0",
     "react-native": "~0.76.9",
     "selenium-webdriver": "^4.35.0",
     "system-testing": "^1.0.62",
