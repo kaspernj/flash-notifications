@@ -50,6 +50,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
   setup() {
     this.useStates({
       count: 0,
+      /** @type {StoredNotificationType[]} */
       notifications: []
     })
 
@@ -107,7 +108,9 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
         style={viewStyle}
         testID="flash-notificaitons/container"
       >
-        {/** @type {StoredNotificationType[]} */ (notifications).map((notification) =>
+        {notifications.map(
+          /** @param {StoredNotificationType} notification */
+          (notification) =>
           <FlashNotification
             count={notification.count}
             key={`notification-${notification.count}`}
