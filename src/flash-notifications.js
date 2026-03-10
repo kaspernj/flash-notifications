@@ -29,8 +29,8 @@ export default class FlashNotifications {
   static errorResponse(error) {
     const defaultErrorMessage = configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."})
 
-    if (!error || typeof error != "object") {
-      FlashNotifications.error(defaultErrorMessage)
+    if (!(error instanceof Error)) {
+      FlashNotifications.error(typeof error == "string" ? error : String(error))
 
       return
     }
