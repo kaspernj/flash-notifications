@@ -44,4 +44,19 @@ describe("FlashNotifications.errorResponse", () => {
     expect(listener.notifications[0].message).toEqual("Something went wrong.")
     expect(listener.notifications[0].type).toEqual("error")
   })
+
+  it("shows the error message for BaseError objects without response errors", () => {
+    const listener = FlashNotificationsListener.current()
+    const error = new Error("Delete failed")
+
+    // @ts-expect-error
+    error.apiMakerType = "BaseError"
+
+    listener.notifications = []
+    FlashNotifications.errorResponse(error)
+
+    expect(listener.notifications.length).toEqual(1)
+    expect(listener.notifications[0].message).toEqual("Delete failed")
+    expect(listener.notifications[0].type).toEqual("error")
+  })
 })
