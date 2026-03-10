@@ -2,20 +2,40 @@
 
 import {digg} from "diggerize"
 import PropTypes from "prop-types"
+// @ts-expect-error No published types for this package.
 import propTypesExact from "prop-types-exact"
 import React, {memo, useEffect, useMemo} from "react"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
+// @ts-expect-error No published types for this package.
 import useEventEmitter from "ya-use-event-emitter"
 import useEnvSense from "env-sense/build/use-env-sense.js"
-import {Animated} from "react-native"
+import * as ReactNative from "react-native"
 
 import debugLog from "../debug.js"
 import events from "../events.js"
+import FlashNotification from "./notification"
+
+void FlashNotification
+
 /**
  * @typedef {object} NotificationObjectType
  * @property {number} count
  * @property {string} message
+ * @property {string} title
+ * @property {string} type
+ */
+
+/**
+ * @typedef {object} StoredNotificationType
+ * @property {number} count
+ * @property {import("react-native").Animated.Value} height
+ * @property {import("react-native").Animated.Value} marginBottom
+ * @property {number | undefined} measuredHeight
+ * @property {string} message
+ * @property {import("react-native").Animated.Value} opacity
+ * @property {boolean} removing
+ * @property {ReturnType<typeof setTimeout>} timeout
  * @property {string} title
  * @property {string} type
  */
@@ -82,15 +102,15 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     }, [isNative, smDown, mdUp, insets.top, insets.right, insets.left])
 
     return (
-      <View
+      <ReactNative.View
         // @ts-expect-error
         dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
-        // @ts-expect-error
+        // @ts-expect-error React Native types do not include the web-only "fixed" position.
         style={viewStyle}
         testID="flash-notificaitons/container"
       >
-        {notifications.map((notification) =>
-          <Notification
+        {/** @type {StoredNotificationType[]} */ (notifications).map((notification) =>
+          <FlashNotification
             count={notification.count}
             key={`notification-${notification.count}`}
             message={notification.message}
@@ -101,7 +121,7 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
             type={notification.type}
           />
         )}
-      </View>
+      </ReactNative.View>
     )
   }
 
@@ -118,13 +138,14 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
     this.timeouts.push(timeout)
 
+    /** @type {StoredNotificationType} */
     const notification = {
       count,
-      height: new Animated.Value(0),
-      marginBottom: new Animated.Value(this.notificationSpacing),
+      height: new ReactNative.Animated.Value(0),
+      marginBottom: new ReactNative.Animated.Value(this.notificationSpacing),
       measuredHeight: undefined,
       message: digg(detail, "message"),
-      opacity: new Animated.Value(1),
+      opacity: new ReactNative.Animated.Value(1),
       removing: false,
       timeout,
       title: digg(detail, "title"),
@@ -140,11 +161,20 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     this.setState({count, notifications: this.s.notifications.concat([notification])})
   }
 
+  /**
+   * @param {StoredNotificationType} notification
+   * @returns {void}
+   */
   onRemovedClicked = (notification) => {
     debugLog("FlashNotifications: notification pressed", {id: notification.count})
     this.dismissNotification(notification, "press")
   }
 
+  /**
+   * @param {StoredNotificationType} notification
+   * @param {number} measuredHeight
+   * @returns {void}
+   */
   onNotificationMeasured = (notification, measuredHeight) => {
     if (notification.measuredHeight) return
 
@@ -155,8 +185,16 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     this.setState({notifications: [...this.s.notifications]})
   }
 
+  /**
+   * @param {number} count
+   * @param {string} [reason]
+   * @returns {void}
+  */
   dismissNotificationByCount = (count, reason = "unknown") => {
-    const notification = this.s.notifications.find((item) => item.count == count)
+    const notification = /** @type {StoredNotificationType | undefined} */ (this.s.notifications.find(
+      /** @param {StoredNotificationType} item */
+      (item) => item.count == count
+    ))
     if (!notification) {
       debugLog("FlashNotifications: notification not found", {id: count, reason})
       return
@@ -165,6 +203,11 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     this.dismissNotification(notification, reason)
   }
 
+  /**
+   * @param {StoredNotificationType} notification
+   * @param {string} [reason]
+   * @returns {void}
+   */
   dismissNotification = (notification, reason = "unknown") => {
     if (notification.removing) {
       debugLog("FlashNotifications: notification already removing", {id: notification.count, reason})
@@ -190,10 +233,10 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
 
     const dismissDuration = reason === "press" ? 80 : 200
 
-    Animated.parallel([
-      Animated.timing(notification.opacity, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
-      Animated.timing(notification.height, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
-      Animated.timing(notification.marginBottom, {toValue: 0, duration: dismissDuration, useNativeDriver: false})
+    ReactNative.Animated.parallel([
+      ReactNative.Animated.timing(notification.opacity, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
+      ReactNative.Animated.timing(notification.height, {toValue: 0, duration: dismissDuration, useNativeDriver: false}),
+      ReactNative.Animated.timing(notification.marginBottom, {toValue: 0, duration: dismissDuration, useNativeDriver: false})
     ]).start(() => {
       debugLog("FlashNotifications: animations end", {
         id: notification.count,
@@ -203,7 +246,10 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       debugLog("FlashNotifications: fade animation end", {id: notification.count, reason})
 
       this.setState({
-        notifications: this.s.notifications.filter((item) => item.count != notification.count)
+        notifications: this.s.notifications.filter(
+          /** @param {StoredNotificationType} item */
+          (item) => item.count != notification.count
+        )
       })
 
       debugLog("FlashNotifications: notification removed", {id: notification.count, reason})

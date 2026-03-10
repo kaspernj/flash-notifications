@@ -1,10 +1,16 @@
 import PropTypes from "prop-types"
+// @ts-expect-error No published types for this package.
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
+import * as ReactNative from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
 
+void ReactNative
+
+/** @type {Record<string, object>} */
 const dataSets = {}
+/** @type {Record<string, object>} */
 const styles = {}
 
 export default memo(shapeComponent(class FlashNotificationsNotification extends ShapeComponent {
@@ -34,8 +40,8 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
     )
 
     return (
-      <Animated.View style={this.tt.wrapperStyle}>
-        <Pressable
+      <ReactNative.Animated.View style={this.tt.wrapperStyle}>
+        <ReactNative.Pressable
           dataSet={pressableDataSet}
           onLayout={this.tt.onLayout}
           onPress={this.tt.onRemovedClicked}
@@ -76,11 +82,11 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
           }}
           testID="flash-notifications-notification"
         >
-          <View
+          <ReactNative.View
             style={styles.titleView ||= {marginBottom: 5}}
             testID="notification-title"
           >
-            <Text
+            <ReactNative.Text
               style={styles.titleText ||= {
                 color: "#fff",
                 fontWeight: 700
@@ -88,21 +94,21 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
               testID={`flash-notifications/notification-${count}/title`}
             >
               {title}
-            </Text>
-          </View>
-          <View
+            </ReactNative.Text>
+          </ReactNative.View>
+          <ReactNative.View
             dataSet={dataSets[`notificationMessage-${count}`] ||= {count: `${count}`}}
             testID="notification-message"
           >
-            <Text
+            <ReactNative.Text
               style={styles.messageText ||= {color: "#fff"}}
               testID={`flash-notifications/notification-${count}/message`}
             >
               {message}
-            </Text>
-          </View>
-        </Pressable>
-      </Animated.View>
+            </ReactNative.Text>
+          </ReactNative.View>
+        </ReactNative.Pressable>
+      </ReactNative.Animated.View>
     )
   }
 
