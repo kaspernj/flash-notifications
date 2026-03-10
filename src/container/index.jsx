@@ -8,12 +8,10 @@ import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-comp
 import {useBreakpoint} from "responsive-breakpoints"
 import useEventEmitter from "ya-use-event-emitter"
 import useEnvSense from "env-sense/build/use-env-sense.js"
-import {Animated, View} from "react-native"
+import {Animated} from "react-native"
 
 import debugLog from "../debug.js"
 import events from "../events.js"
-import Notification from "./notification"
-
 /**
  * @typedef {object} NotificationObjectType
  * @property {number} count
