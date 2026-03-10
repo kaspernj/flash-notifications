@@ -1,4 +1,5 @@
 const js = require("@eslint/js")
+const reactPlugin = require("eslint-plugin-react")
 const globals = require("globals")
 
 /**
@@ -18,6 +19,9 @@ module.exports = [
   js.configs.recommended,
   {
     files: ["src/**/*.{js,jsx}"],
+    plugins: {
+      react: reactPlugin
+    },
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
@@ -34,7 +38,8 @@ module.exports = [
     rules: {
       "eqeqeq": "off",
       "no-return-assign": "off",
-      "no-unused-vars": ["error", {varsIgnorePattern: "^React$"}]
+      "no-unused-vars": ["error", {varsIgnorePattern: "^React$"}],
+      "react/jsx-uses-vars": "error"
     }
   }
 ]

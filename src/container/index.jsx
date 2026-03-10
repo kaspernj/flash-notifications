@@ -99,27 +99,27 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       return style
     }, [isNative, smDown, mdUp, insets.top, insets.right, insets.left])
 
-    return React.createElement(
-      View,
-      {
+    return (
+      <View
         // @ts-expect-error
-        dataSet: this.rootViewDataSet ||= {component: "flash-notifications-container"},
+        dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
         // @ts-expect-error React Native types do not include the web-only "fixed" position.
-        style: viewStyle,
-        testID: "flash-notificaitons/container"
-      },
-      /** @type {StoredNotificationType[]} */ (notifications).map((notification) =>
-        React.createElement(FlashNotification, {
-          count: notification.count,
-          key: `notification-${notification.count}`,
-          message: notification.message,
-          notification,
-          onMeasured: this.onNotificationMeasured,
-          onRemovedClicked: this.onRemovedClicked,
-          title: notification.title,
-          type: notification.type
-        })
-      )
+        style={viewStyle}
+        testID="flash-notificaitons/container"
+      >
+        {/** @type {StoredNotificationType[]} */ (notifications).map((notification) =>
+          <FlashNotification
+            count={notification.count}
+            key={`notification-${notification.count}`}
+            message={notification.message}
+            notification={notification}
+            onMeasured={this.onNotificationMeasured}
+            onRemovedClicked={this.onRemovedClicked}
+            title={notification.title}
+            type={notification.type}
+          />
+        )}
+      </View>
     )
   }
 
