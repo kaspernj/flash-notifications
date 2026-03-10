@@ -49,8 +49,10 @@ export default class FlashNotifications {
     // @ts-expect-error
     } else if (error.apiMakerType == "BaseError") {
       // @ts-expect-error
-      if (error.args.response && error.args.response.errors) {
-        const errors = /** @type {Array<string | {message: string}[]>} */ (digg(error, "args", "response", "errors"))
+      const response = error.args && error.args.response
+      const errors = /** @type {Array<string | {message: string}[]> | undefined} */ (response && response.errors)
+
+      if (errors) {
         const errorMessages = errors.map((error) => {
           if (typeof error == "string") {
             return error
@@ -60,8 +62,10 @@ export default class FlashNotifications {
         })
 
         FlashNotifications.error(errorMessages.join(". "))
+      } else if (error.message) {
+        FlashNotifications.error(error.message)
       } else {
-        throw error
+        FlashNotifications.error(configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."}))
       }
     } else {
       const constructorName = digg(error, "constructor", "name")
