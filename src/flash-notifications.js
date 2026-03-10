@@ -27,8 +27,6 @@ export default class FlashNotifications {
    * @returns {void}
    */
   static errorResponse(error) {
-    const defaultErrorMessage = configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."})
-
     if (!(error instanceof Error)) {
       FlashNotifications.error(typeof error == "string" ? error : String(error))
 
@@ -67,6 +65,7 @@ export default class FlashNotifications {
       }
     } else {
       const constructorName = digg(error, "constructor", "name")
+      const defaultErrorMessage = configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."})
       const message = digg(error, "message")
 
       console.error(`Didnt know what to do with that ${constructorName}: ${message}`)
