@@ -2,14 +2,9 @@ import PropTypes from "prop-types"
 // @ts-expect-error No published types for this package.
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
-import {Animated, Pressable, Text, View} from "react-native"
+import {Animated, Pressable, Text, View} from "react-native" // eslint-disable-line no-unused-vars
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
-
-void Animated
-void Pressable
-void Text
-void View
 
 /** @type {Record<string, object>} */
 const dataSets = {}

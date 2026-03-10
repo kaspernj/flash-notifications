@@ -10,14 +10,11 @@ import {useBreakpoint} from "responsive-breakpoints"
 // @ts-expect-error No published types for this package.
 import useEventEmitter from "ya-use-event-emitter"
 import useEnvSense from "env-sense/build/use-env-sense.js"
-import {Animated, View} from "react-native"
+import {Animated, View} from "react-native" // eslint-disable-line no-unused-vars
 
 import debugLog from "../debug.js"
 import events from "../events.js"
-import FlashNotification from "./notification"
-
-void View
-void FlashNotification
+import FlashNotification from "./notification" // eslint-disable-line no-unused-vars
 
 /**
  * @typedef {object} NotificationObjectType
