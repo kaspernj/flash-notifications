@@ -12,3 +12,4 @@
 - Switch useEventEmitter import to ya-use-event-emitter.
 - Remove @kaspernj/api-maker peer dependency.
 - Publish native sources and Expo module config in package files list.
+- Make `FlashNotifications.errorResponse(...)` handle unknown/non-ApiMaker errors safely by showing a generic translated error instead of throwing on missing `response` payloads.
