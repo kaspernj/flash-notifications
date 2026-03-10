@@ -23,10 +23,18 @@ export default class FlashNotifications {
   }
 
   /**
-   * @param {Error} error
+   * @param {unknown} error
    * @returns {void}
    */
   static errorResponse(error) {
+    const defaultErrorMessage = configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."})
+
+    if (!(error instanceof Error)) {
+      FlashNotifications.error(typeof error == "string" ? error : String(error))
+
+      return
+    }
+
     // @ts-expect-error
     if (error.apiMakerType == "ValidationError") {
       // @ts-expect-error
@@ -58,8 +66,11 @@ export default class FlashNotifications {
         throw error
       }
     } else {
-      console.error(`Didnt know what to do with that ${error.constructor.name}: ${error.message}`)
-      throw error
+      const constructorName = digg(error, "constructor", "name")
+      const message = digg(error, "message")
+
+      console.error(`Didnt know what to do with that ${constructorName}: ${message}`)
+      FlashNotifications.error(defaultErrorMessage)
     }
   }
 
