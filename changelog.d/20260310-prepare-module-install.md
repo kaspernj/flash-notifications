@@ -1,0 +1,1 @@
+Prevent `npm install` from running `expo-module prepare`, so builds no longer require `rsync` during dependency installation. Use `npm run prepare:module` when refreshing Expo module generated files locally.
