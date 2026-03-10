@@ -127,5 +127,7 @@ When enabled, the library logs lifecycle events such as notification creation, p
 
 ## Contributing
 
+If you need to refresh Expo module generated files locally, run `npm run prepare:module`. Regular `npm install` no longer runs that step automatically.
+
 Contributions are welcome. Please refer to the Expo contributing guide:
 https://github.com/expo/expo#contributing
