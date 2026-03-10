@@ -1,8 +1,8 @@
 import PropTypes from "prop-types"
-// @ts-expect-error No published types for this package.
+// @ts-expect-error Package ships no .d.ts files.
 import PropTypesExact from "prop-types-exact"
 import React, {memo, useMemo} from "react"
-import {Animated, Pressable, Text, View} from "react-native" // eslint-disable-line no-unused-vars
+import {Animated, Pressable, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
 
@@ -37,13 +37,16 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
       [className, type]
     )
 
-    return (
-      <Animated.View style={this.tt.wrapperStyle}>
-        <Pressable
-          dataSet={pressableDataSet}
-          onLayout={this.tt.onLayout}
-          onPress={this.tt.onRemovedClicked}
-          style={styles[`pressable-${type}-${breakpoint.smDown}-${breakpoint.mdUp}`] ||= {
+    return React.createElement(
+      Animated.View,
+      {style: this.tt.wrapperStyle},
+      React.createElement(
+        Pressable,
+        {
+          dataSet: pressableDataSet,
+          onLayout: this.tt.onLayout,
+          onPress: this.tt.onRemovedClicked,
+          style: styles[`pressable-${type}-${breakpoint.smDown}-${breakpoint.mdUp}`] ||= {
             padding: 15,
             borderRadius: 11,
             cursor: "pointer",
@@ -77,36 +80,43 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
                 return "rgba(204, 51, 0, 0.87)"
               }
             })()
-          }}
-          testID="flash-notifications-notification"
-        >
-          <View
-            style={styles.titleView ||= {marginBottom: 5}}
-            testID="notification-title"
-          >
-            <Text
-              style={styles.titleText ||= {
+          },
+          testID: "flash-notifications-notification"
+        },
+        React.createElement(
+          View,
+          {
+            style: styles.titleView ||= {marginBottom: 5},
+            testID: "notification-title"
+          },
+          React.createElement(
+            Text,
+            {
+              style: styles.titleText ||= {
                 color: "#fff",
                 fontWeight: 700
-              }}
-              testID={`flash-notifications/notification-${count}/title`}
-            >
-              {title}
-            </Text>
-          </View>
-          <View
-            dataSet={dataSets[`notificationMessage-${count}`] ||= {count: `${count}`}}
-            testID="notification-message"
-          >
-            <Text
-              style={styles.messageText ||= {color: "#fff"}}
-              testID={`flash-notifications/notification-${count}/message`}
-            >
-              {message}
-            </Text>
-          </View>
-        </Pressable>
-      </Animated.View>
+              },
+              testID: `flash-notifications/notification-${count}/title`
+            },
+            title
+          )
+        ),
+        React.createElement(
+          View,
+          {
+            dataSet: dataSets[`notificationMessage-${count}`] ||= {count: `${count}`},
+            testID: "notification-message"
+          },
+          React.createElement(
+            Text,
+            {
+              style: styles.messageText ||= {color: "#fff"},
+              testID: `flash-notifications/notification-${count}/message`
+            },
+            message
+          )
+        )
+      )
     )
   }
 

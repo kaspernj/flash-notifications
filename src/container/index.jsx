@@ -2,7 +2,7 @@
 
 import {digg} from "diggerize"
 import PropTypes from "prop-types"
-// @ts-expect-error No published types for this package.
+// @ts-expect-error Package ships no .d.ts files.
 import propTypesExact from "prop-types-exact"
 import React, {memo, useEffect, useMemo} from "react"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
@@ -10,11 +10,11 @@ import {useBreakpoint} from "responsive-breakpoints"
 // @ts-expect-error No published types for this package.
 import useEventEmitter from "ya-use-event-emitter"
 import useEnvSense from "env-sense/build/use-env-sense.js"
-import {Animated, View} from "react-native" // eslint-disable-line no-unused-vars
+import {Animated, View} from "react-native"
 
 import debugLog from "../debug.js"
 import events from "../events.js"
-import FlashNotification from "./notification" // eslint-disable-line no-unused-vars
+import FlashNotification from "./notification"
 
 /**
  * @typedef {object} NotificationObjectType
@@ -99,27 +99,27 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
       return style
     }, [isNative, smDown, mdUp, insets.top, insets.right, insets.left])
 
-    return (
-      <View
+    return React.createElement(
+      View,
+      {
         // @ts-expect-error
-        dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
+        dataSet: this.rootViewDataSet ||= {component: "flash-notifications-container"},
         // @ts-expect-error React Native types do not include the web-only "fixed" position.
-        style={viewStyle}
-        testID="flash-notificaitons/container"
-      >
-        {/** @type {StoredNotificationType[]} */ (notifications).map((notification) =>
-          <FlashNotification
-            count={notification.count}
-            key={`notification-${notification.count}`}
-            message={notification.message}
-            notification={notification}
-            onMeasured={this.onNotificationMeasured}
-            onRemovedClicked={this.onRemovedClicked}
-            title={notification.title}
-            type={notification.type}
-          />
-        )}
-      </View>
+        style: viewStyle,
+        testID: "flash-notificaitons/container"
+      },
+      /** @type {StoredNotificationType[]} */ (notifications).map((notification) =>
+        React.createElement(FlashNotification, {
+          count: notification.count,
+          key: `notification-${notification.count}`,
+          message: notification.message,
+          notification,
+          onMeasured: this.onNotificationMeasured,
+          onRemovedClicked: this.onRemovedClicked,
+          title: notification.title,
+          type: notification.type
+        })
+      )
     )
   }
 
