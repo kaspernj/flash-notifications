@@ -129,5 +129,14 @@ When enabled, the library logs lifecycle events such as notification creation, p
 
 If you need to refresh Expo module generated files locally, run `npm run prepare:module`. Regular `npm install` no longer runs that step automatically.
 
+Before opening or updating a PR, run:
+
+```sh
+npm run lint
+npm run typecheck
+```
+
+The repo's flat ESLint config relies on `react/jsx-uses-vars` so React Native JSX imports are treated as used. If JSX imports such as `View` or `Pressable` start failing `no-unused-vars`, fix the ESLint config rather than rewriting the component render tree.
+
 Contributions are welcome. Please refer to the Expo contributing guide:
 https://github.com/expo/expo#contributing
