@@ -48,7 +48,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/react": "~18.3.12",
-    "eslint": "^9.39.1",
+    "eslint": "^10.1.0",
     "eslint-plugin-react": "^7.37.5",
     "expo": "~55.0.5",
     "expo-module-scripts": "^4.0.2",
