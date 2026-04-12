@@ -52,7 +52,7 @@
     "eslint-plugin-react": "^7.37.5",
     "expo": "~55.0.5",
     "expo-module-scripts": "^4.0.2",
-    "globals": "^16.4.0",
+    "globals": "^17.5.0",
     "react-native": "~0.76.9",
     "selenium-webdriver": "^4.35.0",
     "system-testing": "^1.0.62",
