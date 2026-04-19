@@ -12,6 +12,7 @@
     "clean": "expo-module clean",
     "export:web": "cd example && npm install && cd .. && npm run prepare:dummy && cd example && npx expo export -p web --output-dir dist",
     "lint": "expo-module lint -- --max-warnings 0",
+    "prepare": "npm run build",
     "prepare:module": "expo-module prepare",
     "test": "node scripts/velocious-test.js",
     "typecheck": "expo-module build",
