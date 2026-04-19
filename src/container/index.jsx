@@ -42,17 +42,17 @@ export default memo(shapeComponent(class FlashNotificationsContainer extends Sha
     insets: PropTypes.object
   })
 
+  state = {
+    count: 0,
+    /** @type {StoredNotificationType[]} */
+    notifications: []
+  }
+
   /** @type {number[]} */
   timeouts = []
   notificationSpacing = 15
 
   setup() {
-    this.useStates({
-      count: 0,
-      /** @type {StoredNotificationType[]} */
-      notifications: []
-    })
-
     useEventEmitter(events, "pushNotification", this.onPushNotificationEvent)
     useEffect(() => {
       return () => {
