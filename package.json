@@ -21,7 +21,7 @@
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
     "open:android": "open -a \"Android Studio\" example/android",
-    "release:patch": "npm version patch -m \"Bump version to %s\" && git push --follow-tags && npm whoami || npm login && npm publish"
+    "release:patch": "git checkout master && git fetch origin && git merge --ff-only origin/master && npm version patch -m \"Bump version to %s\" && git push --follow-tags && npm whoami || npm login && npm publish"
   },
   "keywords": [
     "react-native",
