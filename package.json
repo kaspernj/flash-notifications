@@ -56,7 +56,7 @@
     "globals": "^16.4.0",
     "react-native": "~0.76.9",
     "selenium-webdriver": "^4.35.0",
-    "system-testing": "^1.0.62",
+    "system-testing": "^1.0.101",
     "velocious": "^1.0.183"
   },
   "peerDependencies": {
