@@ -12,7 +12,7 @@
     "clean": "expo-module clean",
     "export:web": "cd example && npm install && cd .. && npm run prepare:dummy && cd example && npx expo export -p web --output-dir dist",
     "lint": "expo-module lint -- --max-warnings 0",
-    "prepare": "npm run build",
+    "prepare": "expo-module prepare",
     "prepare:module": "expo-module prepare",
     "test": "node scripts/velocious-test.js",
     "typecheck": "expo-module build",
@@ -21,7 +21,7 @@
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
     "open:android": "open -a \"Android Studio\" example/android",
-    "release:patch": "git checkout master && git fetch origin && git merge --ff-only origin/master && npm version patch -m \"Bump version to %s\" && git push --follow-tags && npm whoami || npm login && npm publish"
+    "release:patch": "git diff --quiet && git checkout master && git fetch origin && git merge --ff-only origin/master && npm version patch -m \"Bump version to %s\" && git push --follow-tags && (npm whoami || npm login) && npm publish"
   },
   "keywords": [
     "react-native",
