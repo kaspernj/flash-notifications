@@ -37,22 +37,37 @@ import FlashNotification from "./notification"
  * @property {string} type
  */
 
-export default memo(shapeComponent(class FlashNotificationsContainer extends ShapeComponent {
+/**
+ * @typedef {object} FlashNotificationsContainerProps
+ * @property {{top?: number, right?: number, left?: number}=} insets
+ */
+
+/**
+ * @typedef {object} FlashNotificationsContainerState
+ * @property {number} count
+ * @property {StoredNotificationType[]} notifications
+ */
+
+export default memo(shapeComponent(
+  /**
+   * @augments {ShapeComponent<FlashNotificationsContainerProps, FlashNotificationsContainerState>}
+   */
+  class FlashNotificationsContainer extends ShapeComponent {
   static propTypes = propTypesExact({
     insets: PropTypes.object
   })
+
+  state = {
+    count: 0,
+    /** @type {StoredNotificationType[]} */
+    notifications: []
+  }
 
   /** @type {number[]} */
   timeouts = []
   notificationSpacing = 15
 
   setup() {
-    this.useStates({
-      count: 0,
-      /** @type {StoredNotificationType[]} */
-      notifications: []
-    })
-
     useEventEmitter(events, "pushNotification", this.onPushNotificationEvent)
     useEffect(() => {
       return () => {

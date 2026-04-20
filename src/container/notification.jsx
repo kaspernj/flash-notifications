@@ -1,3 +1,5 @@
+// @ts-check
+
 import PropTypes from "prop-types"
 // @ts-expect-error Package ships no .d.ts files.
 import PropTypesExact from "prop-types-exact"
@@ -6,12 +8,43 @@ import {Animated, Pressable, Text, View} from "react-native"
 import {shapeComponent, ShapeComponent} from "set-state-compare/build/shape-component.js"
 import {useBreakpoint} from "responsive-breakpoints"
 
+/**
+ * @typedef {object} StoredNotificationType
+ * @property {number} count
+ * @property {import("react-native").Animated.Value} height
+ * @property {import("react-native").Animated.Value} marginBottom
+ * @property {number | undefined} measuredHeight
+ * @property {string} message
+ * @property {import("react-native").Animated.Value} opacity
+ * @property {boolean} removing
+ * @property {ReturnType<typeof setTimeout>} timeout
+ * @property {string} title
+ * @property {string} type
+ */
+
+/**
+ * @typedef {object} FlashNotificationsNotificationProps
+ * @property {string=} className
+ * @property {number} count
+ * @property {string} message
+ * @property {StoredNotificationType} notification
+ * @property {(notification: StoredNotificationType, measuredHeight: number) => void} onMeasured
+ * @property {(notification: StoredNotificationType) => void} onRemovedClicked
+ * @property {string} title
+ * @property {string} type
+ */
+
 /** @type {Record<string, object>} */
 const dataSets = {}
-/** @type {Record<string, object>} */
-const styles = {}
+/** @type {Record<string, import("react-native").ViewStyle>} */
+const viewStyles = {}
+/** @type {Record<string, import("react-native").TextStyle>} */
+const textStyles = {}
 
-export default memo(shapeComponent(class FlashNotificationsNotification extends ShapeComponent {
+/**
+ * @augments {ShapeComponent<FlashNotificationsNotificationProps>}
+ */
+class FlashNotificationsNotification extends ShapeComponent {
   static propTypes = PropTypesExact({
     className: PropTypes.string,
     count: PropTypes.number.isRequired,
@@ -36,56 +69,57 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
       }),
       [className, type]
     )
-
     return (
       <Animated.View style={this.tt.wrapperStyle}>
         <Pressable
+          // @ts-expect-error React Native types do not include the web-only dataSet prop.
           dataSet={pressableDataSet}
           onLayout={this.tt.onLayout}
           onPress={this.tt.onRemovedClicked}
-          style={styles[`pressable-${type}-${breakpoint.smDown}-${breakpoint.mdUp}`] ||= {
-            padding: 15,
-            borderRadius: 11,
-            cursor: "pointer",
-            width: (() => {
-              if (breakpoint.smDown) {
-                return "100%"
-              } else if (breakpoint.mdUp) {
-                return 300
-              }
-            })(),
-            maxWidth: (() => {
-              if (breakpoint.mdUp) {
-                return "100%"
-              }
-            })(),
-            border: (() => {
-              if (type == "error") {
-                return "1px solid rgba(161, 34, 32, 0.95)"
-              } else if (type == "success") {
-                return "1px solid rgba(0, 0, 0, 0.95)"
-              } else if (type == "alert") {
-                return "1px solid rgba(204, 51, 0, 0.95)"
-              }
-            })(),
-            backgroundColor: (() => {
-              if (type == "error") {
-                return "rgba(161, 34, 32, 0.87)"
-              } else if (type == "success") {
-                return "rgba(0, 0, 0, 0.87)"
-              } else if (type == "alert") {
-                return "rgba(204, 51, 0, 0.87)"
-              }
-            })()
-          }}
+          style={breakpoint.styling({
+            base: {
+              padding: 15,
+              borderRadius: 11,
+              cursor: "pointer",
+              border: (() => {
+                if (type == "error") {
+                  return "1px solid rgba(161, 34, 32, 0.95)"
+                } else if (type == "success") {
+                  return "1px solid rgba(0, 0, 0, 0.95)"
+                } else if (type == "alert") {
+                  return "1px solid rgba(204, 51, 0, 0.95)"
+                }
+
+                return undefined
+              })(),
+              backgroundColor: (() => {
+                if (type == "error") {
+                  return "rgba(161, 34, 32, 0.87)"
+                } else if (type == "success") {
+                  return "rgba(0, 0, 0, 0.87)"
+                } else if (type == "alert") {
+                  return "rgba(204, 51, 0, 0.87)"
+                }
+
+                return undefined
+              })()
+            },
+            smDown: {
+              width: "100%"
+            },
+            mdUp: {
+              width: 300,
+              maxWidth: "100%"
+            }
+          })}
           testID="flash-notifications-notification"
         >
           <View
-            style={styles.titleView ||= {marginBottom: 5}}
+            style={viewStyles.titleView ||= {marginBottom: 5}}
             testID="notification-title"
           >
             <Text
-              style={styles.titleText ||= {
+              style={textStyles.titleText ||= {
                 color: "#fff",
                 fontWeight: 700
               }}
@@ -95,11 +129,12 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
             </Text>
           </View>
           <View
+            // @ts-expect-error React Native types do not include the web-only dataSet prop.
             dataSet={dataSets[`notificationMessage-${count}`] ||= {count: `${count}`}}
             testID="notification-message"
           >
             <Text
-              style={styles.messageText ||= {color: "#fff"}}
+              style={textStyles.messageText ||= {color: "#fff"}}
               testID={`flash-notifications/notification-${count}/message`}
             >
               {message}
@@ -113,16 +148,20 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
   get wrapperStyle() {
     const {notification} = this.p
 
-    return {
+    return /** @type {import("react-native").Animated.WithAnimatedObject<import("react-native").ViewStyle>} */ ({
       height: notification.measuredHeight ? notification.height : undefined,
       marginBottom: notification.marginBottom,
       opacity: notification.opacity,
       overflow: "hidden"
-    }
+    })
   }
 
   onRemovedClicked = () => this.p.onRemovedClicked(this.p.notification)
 
+  /**
+   * @param {import("react-native").LayoutChangeEvent} event
+   * @returns {void}
+   */
   onLayout = (event) => {
     const {notification} = this.p
 
@@ -130,4 +169,6 @@ export default memo(shapeComponent(class FlashNotificationsNotification extends 
       this.p.onMeasured(notification, event.nativeEvent.layout.height)
     }
   }
-}))
+}
+
+export default memo(shapeComponent(FlashNotificationsNotification))
