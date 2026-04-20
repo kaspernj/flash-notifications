@@ -36,18 +36,15 @@ import {useBreakpoint} from "responsive-breakpoints"
 
 /** @type {Record<string, object>} */
 const dataSets = {}
-/** @type {Record<string, object>} */
-const pressableStyles = {}
 /** @type {Record<string, import("react-native").ViewStyle>} */
 const viewStyles = {}
 /** @type {Record<string, import("react-native").TextStyle>} */
 const textStyles = {}
 
-export default memo(shapeComponent(
-  /**
-   * @augments {ShapeComponent<FlashNotificationsNotificationProps>}
-   */
-  class FlashNotificationsNotification extends ShapeComponent {
+/**
+ * @augments {ShapeComponent<FlashNotificationsNotificationProps>}
+ */
+class FlashNotificationsNotification extends ShapeComponent {
   static propTypes = PropTypesExact({
     className: PropTypes.string,
     count: PropTypes.number.isRequired,
@@ -72,7 +69,6 @@ export default memo(shapeComponent(
       }),
       [className, type]
     )
-
     return (
       <Animated.View style={this.tt.wrapperStyle}>
         <Pressable
@@ -80,49 +76,42 @@ export default memo(shapeComponent(
           dataSet={pressableDataSet}
           onLayout={this.tt.onLayout}
           onPress={this.tt.onRemovedClicked}
-          style={pressableStyles[`pressable-${type}-${breakpoint.smDown}-${breakpoint.mdUp}`] ||= {
-            padding: 15,
-            borderRadius: 11,
-            cursor: "pointer",
-            width: (() => {
-              if (breakpoint.smDown) {
-                return "100%"
-              } else if (breakpoint.mdUp) {
-                return 300
-              }
+          style={breakpoint.styling({
+            base: {
+              padding: 15,
+              borderRadius: 11,
+              cursor: "pointer",
+              border: (() => {
+                if (type == "error") {
+                  return "1px solid rgba(161, 34, 32, 0.95)"
+                } else if (type == "success") {
+                  return "1px solid rgba(0, 0, 0, 0.95)"
+                } else if (type == "alert") {
+                  return "1px solid rgba(204, 51, 0, 0.95)"
+                }
 
-              return undefined
-            })(),
-            maxWidth: (() => {
-              if (breakpoint.mdUp) {
-                return "100%"
-              }
+                return undefined
+              })(),
+              backgroundColor: (() => {
+                if (type == "error") {
+                  return "rgba(161, 34, 32, 0.87)"
+                } else if (type == "success") {
+                  return "rgba(0, 0, 0, 0.87)"
+                } else if (type == "alert") {
+                  return "rgba(204, 51, 0, 0.87)"
+                }
 
-              return undefined
-            })(),
-            border: (() => {
-              if (type == "error") {
-                return "1px solid rgba(161, 34, 32, 0.95)"
-              } else if (type == "success") {
-                return "1px solid rgba(0, 0, 0, 0.95)"
-              } else if (type == "alert") {
-                return "1px solid rgba(204, 51, 0, 0.95)"
-              }
-
-              return undefined
-            })(),
-            backgroundColor: (() => {
-              if (type == "error") {
-                return "rgba(161, 34, 32, 0.87)"
-              } else if (type == "success") {
-                return "rgba(0, 0, 0, 0.87)"
-              } else if (type == "alert") {
-                return "rgba(204, 51, 0, 0.87)"
-              }
-
-              return undefined
-            })()
-          }}
+                return undefined
+              })()
+            },
+            smDown: {
+              width: "100%"
+            },
+            mdUp: {
+              width: 300,
+              maxWidth: "100%"
+            }
+          })}
           testID="flash-notifications-notification"
         >
           <View
@@ -180,4 +169,6 @@ export default memo(shapeComponent(
       this.p.onMeasured(notification, event.nativeEvent.layout.height)
     }
   }
-}))
+}
+
+export default memo(shapeComponent(FlashNotificationsNotification))
