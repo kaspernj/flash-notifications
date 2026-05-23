@@ -21,7 +21,7 @@
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
     "open:android": "open -a \"Android Studio\" example/android",
-    "release:patch": "git diff --quiet && git checkout master && git fetch origin && git merge --ff-only origin/master && npm version patch -m \"Bump version to %s\" && git push --follow-tags && (npm whoami || npm login) && npm publish"
+    "release:patch": "release-patch"
   },
   "keywords": [
     "react-native",
@@ -55,6 +55,7 @@
     "expo-module-scripts": "^4.0.2",
     "globals": "^17.5.0",
     "react-native": "~0.76.9",
+    "release-patch": "^1.0.0",
     "selenium-webdriver": "^4.35.0",
     "system-testing": "^1.0.101",
     "velocious": "^1.0.343"
