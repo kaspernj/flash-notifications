@@ -132,6 +132,7 @@ export default memo(shapeComponent(
             notification={notification}
             onMeasured={this.onNotificationMeasured}
             onRemovedClicked={this.onRemovedClicked}
+            removing={notification.removing}
             title={notification.title}
             type={notification.type}
           />
@@ -244,8 +245,12 @@ export default memo(shapeComponent(
       debugLog("FlashNotifications: notification missing measured height", {id: notification.count})
       notification.measuredHeight = 1
       notification.height.setValue(1)
-      this.setState({notifications: [...this.s.notifications]})
     }
+
+    // Re-render immediately so the closing notification drops pointer events (pointerEvents="none")
+    // the instant it starts fading out. Otherwise the fading overlay keeps intercepting the next
+    // click/fill for the whole fade duration even though it is on its way out.
+    this.setState({notifications: [...this.s.notifications]})
 
     debugLog("FlashNotifications: animations begin", {
       id: notification.count,
