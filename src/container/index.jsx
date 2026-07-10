@@ -118,6 +118,12 @@ export default memo(shapeComponent(
       <View
         // @ts-expect-error
         dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
+        // "box-none" so the fixed, high-zIndex container never intercepts pointer events on its own
+        // bounds: empty gaps pass through, and a fading notification (whose wrapper is set to
+        // pointerEvents="none" while removing) passes through too, while a live notification still
+        // receives its own presses. Without this the container itself would swallow clicks/fills
+        // aimed at the form beneath it during a notification's fade-out.
+        pointerEvents="box-none"
         // @ts-expect-error React Native types do not include the web-only "fixed" position.
         style={viewStyle}
         testID="flash-notificaitons/container"
@@ -132,6 +138,7 @@ export default memo(shapeComponent(
             notification={notification}
             onMeasured={this.onNotificationMeasured}
             onRemovedClicked={this.onRemovedClicked}
+            removing={notification.removing}
             title={notification.title}
             type={notification.type}
           />
@@ -244,8 +251,12 @@ export default memo(shapeComponent(
       debugLog("FlashNotifications: notification missing measured height", {id: notification.count})
       notification.measuredHeight = 1
       notification.height.setValue(1)
-      this.setState({notifications: [...this.s.notifications]})
     }
+
+    // Re-render immediately so the closing notification drops pointer events (pointerEvents="none")
+    // the instant it starts fading out. Otherwise the fading overlay keeps intercepting the next
+    // click/fill for the whole fade duration even though it is on its way out.
+    this.setState({notifications: [...this.s.notifications]})
 
     debugLog("FlashNotifications: animations begin", {
       id: notification.count,

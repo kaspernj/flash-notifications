@@ -30,6 +30,7 @@ import {useBreakpoint} from "responsive-breakpoints"
  * @property {StoredNotificationType} notification
  * @property {(notification: StoredNotificationType, measuredHeight: number) => void} onMeasured
  * @property {(notification: StoredNotificationType) => void} onRemovedClicked
+ * @property {boolean} removing
  * @property {string} title
  * @property {string} type
  */
@@ -52,12 +53,13 @@ class FlashNotificationsNotification extends ShapeComponent {
     notification: PropTypes.object.isRequired,
     onMeasured: PropTypes.func.isRequired,
     onRemovedClicked: PropTypes.func.isRequired,
+    removing: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
   })
 
   render() {
-    const {count, message, title, type} = this.p
+    const {count, message, removing, title, type} = this.p
     const {className} = this.props
     const breakpoint = useBreakpoint()
 
@@ -70,7 +72,10 @@ class FlashNotificationsNotification extends ShapeComponent {
       [className, type]
     )
     return (
-      <Animated.View style={this.tt.wrapperStyle}>
+      <Animated.View
+        pointerEvents={removing ? "none" : "auto"}
+        style={this.tt.wrapperStyle}
+      >
         <Pressable
           // @ts-expect-error React Native types do not include the web-only dataSet prop.
           dataSet={pressableDataSet}
