@@ -118,6 +118,12 @@ export default memo(shapeComponent(
       <View
         // @ts-expect-error
         dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
+        // "box-none" so the fixed, high-zIndex container never intercepts pointer events on its own
+        // bounds: empty gaps pass through, and a fading notification (whose wrapper is set to
+        // pointerEvents="none" while removing) passes through too, while a live notification still
+        // receives its own presses. Without this the container itself would swallow clicks/fills
+        // aimed at the form beneath it during a notification's fade-out.
+        pointerEvents="box-none"
         // @ts-expect-error React Native types do not include the web-only "fixed" position.
         style={viewStyle}
         testID="flash-notificaitons/container"
