@@ -8,20 +8,21 @@
     "build"
   ],
   "scripts": {
-    "build": "expo-module build",
+    "build": "EXPO_NONINTERACTIVE=1 expo-module build",
     "clean": "expo-module clean",
     "export:web": "cd example && npm install && cd .. && npm run prepare:dummy && cd example && npx expo export -p web --output-dir dist",
-    "lint": "expo-module lint -- --max-warnings 0",
+    "lint": "npm run eslint && npm run typecheck",
     "prepare": "expo-module prepare",
     "prepare:module": "expo-module prepare",
     "test": "node scripts/velocious-test.js",
-    "typecheck": "expo-module build",
+    "typecheck": "tsc --noEmit",
     "prepare:dummy": "npm run build && rm -rf example/node_modules/flash-notifications && mkdir -p example/node_modules/flash-notifications && cp -r build package.json example/node_modules/flash-notifications/",
     "prepublishOnly": "npm run prepare:module && expo-module prepublishOnly",
     "expo-module": "expo-module",
     "open:ios": "xed example/ios",
     "open:android": "open -a \"Android Studio\" example/android",
-    "release:patch": "release-patch"
+    "release:patch": "release-patch",
+    "eslint": "expo-module lint -- --max-warnings 0"
   },
   "keywords": [
     "react-native",
