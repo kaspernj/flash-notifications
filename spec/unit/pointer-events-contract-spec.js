@@ -5,8 +5,8 @@ import fs from "node:fs/promises"
 
 describe("pointer events component contract", () => {
   it("keeps pointer events in styles instead of deprecated top-level props", async () => {
-    const containerSource = await fs.readFile("src/container/index.jsx", "utf8")
-    const notificationSource = await fs.readFile("src/container/notification.jsx", "utf8")
+    const containerSource = await fs.readFile(new URL("../../src/container/index.jsx", import.meta.url), "utf8")
+    const notificationSource = await fs.readFile(new URL("../../src/container/notification.jsx", import.meta.url), "utf8")
 
     expect(containerSource).toContain('pointerEvents: "box-none"')
     expect(notificationSource).toContain('pointerEvents: removing ? "none" : "auto"')

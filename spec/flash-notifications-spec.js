@@ -28,6 +28,7 @@ describe("Flash notifications", () => {
       expect(await notificationContainer.getCssValue("pointer-events")).toEqual("auto")
 
       await systemTest.click(notificationContainer)
+      expect(await notificationContainer.getCssValue("pointer-events")).toEqual("none")
       await systemTest.waitForNoSelector("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
     })
   })
@@ -39,7 +40,10 @@ describe("Flash notifications", () => {
       const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
       await systemTest.click(triggerButton)
 
-      const notificationMessage = await systemTest.findByTestID("notification-message", {useBaseSelector: false})
+      const notificationMessage = await systemTest.find(
+        "[data-testid='flash-notifications-notification'][style*='pointer-events: auto'] [data-testid='notification-message']",
+        {useBaseSelector: false}
+      )
       const notificationText = await notificationMessage.getText()
       expect(notificationText).toEqual("Dismiss me")
 
