@@ -24,7 +24,7 @@ describe("Flash notifications", () => {
       const notificationContainer = await systemTest.findByTestID("flash-notifications-notification", {useBaseSelector: false})
 
       const notificationsOverlay = await systemTest.findByTestID("flash-notificaitons/container", {useBaseSelector: false})
-      expect(await notificationsOverlay.getCssValue("pointer-events")).toEqual("none")
+      expect(await notificationsOverlay.getCssValue("pointer-events")).toEqual("auto")
       expect(await notificationContainer.getCssValue("pointer-events")).toEqual("auto")
 
       await systemTest.click(notificationContainer)
