@@ -40,10 +40,7 @@ describe("Flash notifications", () => {
       const triggerButton = await systemTest.findByTestID("flashNotifications/showNotification")
       await systemTest.click(triggerButton)
 
-      const notificationMessage = await systemTest.find(
-        "[data-testid='flash-notifications-notification'][style*='pointer-events: auto'] [data-testid='notification-message']",
-        {useBaseSelector: false}
-      )
+      const notificationMessage = await systemTest.findByTestID("notification-message", {useBaseSelector: false})
       const notificationText = await notificationMessage.getText()
       expect(notificationText).toEqual("Dismiss me")
 
