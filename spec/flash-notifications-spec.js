@@ -23,6 +23,10 @@ describe("Flash notifications", () => {
       expect(notificationText).toEqual("Dismiss me")
       const notificationContainer = await systemTest.findByTestID("flash-notifications-notification", {useBaseSelector: false})
 
+      const notificationsOverlay = await systemTest.findByTestID("flash-notificaitons/container", {useBaseSelector: false})
+      expect(await notificationsOverlay.getCssValue("pointer-events")).toEqual("none")
+      expect(await notificationContainer.getCssValue("pointer-events")).toEqual("auto")
+
       await systemTest.click(notificationContainer)
       await systemTest.waitForNoSelector("[data-testid='flash-notifications-notification']", {useBaseSelector: false})
     })

@@ -59,7 +59,7 @@ class FlashNotificationsNotification extends ShapeComponent {
   })
 
   render() {
-    const {count, message, removing, title, type} = this.p
+    const {count, message, title, type} = this.p
     const {className} = this.props
     const breakpoint = useBreakpoint()
 
@@ -73,7 +73,6 @@ class FlashNotificationsNotification extends ShapeComponent {
     )
     return (
       <Animated.View
-        pointerEvents={removing ? "none" : "auto"}
         style={this.tt.wrapperStyle}
       >
         <Pressable
@@ -151,13 +150,14 @@ class FlashNotificationsNotification extends ShapeComponent {
   }
 
   get wrapperStyle() {
-    const {notification} = this.p
+    const {notification, removing} = this.p
 
     return /** @type {import("react-native").Animated.WithAnimatedObject<import("react-native").ViewStyle>} */ ({
       height: notification.measuredHeight ? notification.height : undefined,
       marginBottom: notification.marginBottom,
       opacity: notification.opacity,
-      overflow: "hidden"
+      overflow: "hidden",
+      pointerEvents: removing ? "none" : "auto"
     })
   }
 
