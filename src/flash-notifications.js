@@ -5,6 +5,26 @@ import {digg} from "diggerize"
 import configuration from "./configuration.js"
 import events from "./events.js"
 
+/**
+ * @typedef {object} ActivityArgs
+ * @property {string} message Translated display string shown while the activity runs.
+ */
+
+/**
+ * @typedef {object} ActivityUpdateArgs
+ * @property {number=} progress Determinate progress in [0, 1]. Omit to keep the bar indeterminate.
+ */
+
+/**
+ * @typedef {object} ActivityHandle
+ * @property {(args?: ActivityUpdateArgs) => void} update Moves the loading bar; without a progress value it stays indeterminate.
+ * @property {(message?: string) => void} succeed Flashes the success tone, then dismisses the notification.
+ * @property {(message?: string) => void} fail Flashes the error tone, then dismisses the notification.
+ * @property {() => void} done Dismisses the notification without a tone change.
+ */
+
+let activityNotificationCount = 0
+
 export default class FlashNotifications {
   /**
    * @param {string} message
@@ -83,6 +103,62 @@ export default class FlashNotifications {
    */
   static success(message) {
     FlashNotifications.show({type: "success", text: message})
+  }
+
+  /**
+   * Shows a long-running activity notification with a loading bar. Unlike the
+   * other notification types it never auto-dismisses: the returned handle
+   * decides when the notification leaves the screen.
+   *
+   * @param {ActivityArgs} args
+   * @returns {ActivityHandle}
+   */
+  static activity({message}) {
+    activityNotificationCount += 1
+    const id = `activity-${activityNotificationCount}`
+
+    events.emit("pushNotification", {
+      id,
+      message,
+      title: configuration.translate("js.shared.activity", {defaultValue: "Activity"}),
+      type: "activity"
+    })
+
+    /**
+     * @param {"update" | "succeed" | "fail" | "done"} action
+     * @param {object} [payload]
+     * @returns {void}
+     */
+    const emitControl = (action, payload = {}) => {
+      events.emit("activityNotification", {action, id, ...payload})
+    }
+
+    return {
+      /**
+       * @param {ActivityUpdateArgs} [args]
+       * @returns {void}
+       */
+      update(args = {}) {
+        const {progress} = args
+        const normalizedProgress = typeof progress == "number" && !Number.isNaN(progress)
+          ? Math.min(1, Math.max(0, progress))
+          : undefined
+
+        emitControl("update", {progress: normalizedProgress})
+      },
+
+      succeed(message) {
+        emitControl("succeed", {message})
+      },
+
+      fail(message) {
+        emitControl("fail", {message})
+      },
+
+      done() {
+        emitControl("done")
+      }
+    }
   }
 
   /**

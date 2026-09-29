@@ -78,13 +78,21 @@ Shows an error notification with a localized "Error" title.
 `FlashNotifications.success(message)`
 Shows a success notification with a localized "Success" title.
 
+`FlashNotifications.activity({message})`
+Shows a long-running activity notification with a localized "Activity" title and a loading bar. It does not auto-dismiss; the returned handle resolves it:
+
+- `handle.update({progress})` moves the bar determinately. `progress` is a number in `[0, 1]` (clamped; non-numbers and `NaN` are ignored). Call it without a `progress` to go back to an indeterminate sweep.
+- `handle.succeed(message?)` flashes the success tone, then dismisses.
+- `handle.fail(message?)` flashes the error tone, then dismisses.
+- `handle.done()` dismisses without a tone change.
+
 `FlashNotifications.show({type, text})`
 Shows a notification with a localized title based on `type`. Unknown types fall back to the localized "Notification" title.
 
 `FlashNotifications.errorResponse(error)`
 Handles Api Maker validation and base errors, converting them into notifications. Unknown errors are logged and rethrown.
 
-Notifications auto-dismiss after 4 seconds and can be dismissed immediately by pressing them.
+Notifications auto-dismiss after 4 seconds and can be dismissed immediately by pressing them. Activity notifications are the exception: they stay on screen until the handle resolves them (or the card is pressed, which acts like `done()`).
 
 ### Container
 
