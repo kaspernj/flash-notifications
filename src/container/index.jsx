@@ -1,6 +1,6 @@
 // @ts-check
 
-import {digg} from "diggerize"
+import {dig, digg} from "diggerize"
 import PropTypes from "prop-types"
 // @ts-expect-error Package ships no .d.ts files.
 import propTypesExact from "prop-types-exact"
@@ -18,6 +18,7 @@ import FlashNotification from "./notification"
 /**
  * @typedef {object} NotificationObjectType
  * @property {number} count
+ * @property {string | undefined} id
  * @property {string} message
  * @property {string} title
  * @property {string} type
@@ -26,15 +27,25 @@ import FlashNotification from "./notification"
 /**
  * @typedef {object} StoredNotificationType
  * @property {number} count
+ * @property {string | undefined} id
  * @property {import("react-native").Animated.Value} height
  * @property {import("react-native").Animated.Value} marginBottom
  * @property {number | undefined} measuredHeight
  * @property {string} message
  * @property {import("react-native").Animated.Value} opacity
+ * @property {number | undefined} progress
  * @property {boolean} removing
- * @property {ReturnType<typeof setTimeout>} timeout
+ * @property {ReturnType<typeof setTimeout> | undefined} timeout
  * @property {string} title
  * @property {string} type
+ */
+
+/**
+ * @typedef {object} ActivityNotificationDetailType
+ * @property {"update" | "succeed" | "fail" | "done"} action
+ * @property {string} id
+ * @property {string=} message
+ * @property {number=} progress
  */
 
 /**
@@ -69,6 +80,7 @@ export default memo(shapeComponent(
 
   setup() {
     useEventEmitter(events, "pushNotification", this.onPushNotificationEvent)
+    useEventEmitter(events, "activityNotification", this.onActivityNotificationEvent)
     useEffect(() => {
       return () => {
         for (const timeout of this.timeouts) {
@@ -138,6 +150,7 @@ export default memo(shapeComponent(
             notification={notification}
             onMeasured={this.onNotificationMeasured}
             onRemovedClicked={this.onRemovedClicked}
+            progress={notification.progress}
             removing={notification.removing}
             title={notification.title}
             type={notification.type}
@@ -160,26 +173,40 @@ export default memo(shapeComponent(
    * @returns {void}
    */
   onPushNotification = (detail) => {
+    const type = digg(detail, "type")
+
+    // An activity notification without an id has no handle to resolve it and
+    // would stay on screen forever, so it is dropped.
+    if (type == "activity" && detail.id == undefined) {
+      debugLog("FlashNotifications: activity notification without id ignored")
+      return
+    }
+
     const count = this.s.count + 1
-    const timeout = setTimeout(() => {
+    // Activity notifications stay on screen until their handle resolves them.
+    const timeout = type == "activity" ? undefined : setTimeout(() => {
       debugLog("FlashNotifications: notification timeout", {id: count})
       this.dismissNotificationByCount(count, "timeout")
     }, 4000)
 
-    this.timeouts.push(timeout)
+    if (timeout) {
+      this.timeouts.push(timeout)
+    }
 
     /** @type {StoredNotificationType} */
     const notification = {
       count,
       height: new Animated.Value(0),
+      id: dig(detail, "id"),
       marginBottom: new Animated.Value(this.notificationSpacing),
       measuredHeight: undefined,
       message: digg(detail, "message"),
       opacity: new Animated.Value(1),
+      progress: undefined,
       removing: false,
       timeout,
       title: digg(detail, "title"),
-      type: digg(detail, "type")
+      type
     }
 
     debugLog("FlashNotifications: notification added", {
@@ -198,6 +225,52 @@ export default memo(shapeComponent(
   onRemovedClicked = (notification) => {
     debugLog("FlashNotifications: notification pressed", {id: notification.count})
     this.dismissNotification(notification, "press")
+  }
+
+  /**
+   * @param {...unknown} args
+   * @returns {void}
+   */
+  onActivityNotificationEvent = (...args) => {
+    this.onActivityNotification(/** @type {ActivityNotificationDetailType} */ (args[0]))
+  }
+
+  /**
+   * @param {ActivityNotificationDetailType} detail
+   * @returns {void}
+   */
+  onActivityNotification = (detail) => {
+    const notification = /** @type {StoredNotificationType | undefined} */ (this.s.notifications.find(
+      /** @param {StoredNotificationType} item */
+      (item) => item.id === detail.id
+    ))
+    if (!notification || notification.removing) {
+      debugLog("FlashNotifications: activity notification not found", {id: detail.id, action: detail.action})
+      return
+    }
+
+    if (detail.action == "update") {
+      debugLog("FlashNotifications: activity progress updated", {id: notification.count, progress: detail.progress})
+      notification.progress = detail.progress
+      this.setState({notifications: [...this.s.notifications]})
+      return
+    }
+
+    if (detail.action == "succeed" || detail.action == "fail") {
+      debugLog("FlashNotifications: activity resolved", {id: notification.count, action: detail.action})
+      // Map the action verbs onto the canonical type names so the card
+      // renders the existing success/error tones during the dismiss flash.
+      notification.type = detail.action == "succeed" ? "success" : "error"
+      if (detail.message) {
+        notification.message = detail.message
+      }
+      this.setState({notifications: [...this.s.notifications]})
+      this.dismissNotification(notification, detail.action)
+      return
+    }
+
+    debugLog("FlashNotifications: activity dismissed", {id: notification.count, action: detail.action})
+    this.dismissNotification(notification, "done")
   }
 
   /**

@@ -11,13 +11,15 @@ import {useBreakpoint} from "responsive-breakpoints"
 /**
  * @typedef {object} StoredNotificationType
  * @property {number} count
+ * @property {string | undefined} id
  * @property {import("react-native").Animated.Value} height
  * @property {import("react-native").Animated.Value} marginBottom
  * @property {number | undefined} measuredHeight
  * @property {string} message
  * @property {import("react-native").Animated.Value} opacity
+ * @property {number | undefined} progress
  * @property {boolean} removing
- * @property {ReturnType<typeof setTimeout>} timeout
+ * @property {ReturnType<typeof setTimeout> | undefined} timeout
  * @property {string} title
  * @property {string} type
  */
@@ -30,6 +32,7 @@ import {useBreakpoint} from "responsive-breakpoints"
  * @property {StoredNotificationType} notification
  * @property {(notification: StoredNotificationType, measuredHeight: number) => void} onMeasured
  * @property {(notification: StoredNotificationType) => void} onRemovedClicked
+ * @property {number=} progress
  * @property {boolean} removing
  * @property {string} title
  * @property {string} type
@@ -41,6 +44,8 @@ const dataSets = {}
 const viewStyles = {}
 /** @type {Record<string, import("react-native").TextStyle>} */
 const textStyles = {}
+/** @type {import("react-native").ViewStyle} */
+const barFillStyle = {backgroundColor: "#fff", borderRadius: 2, height: 4, width: "30%"}
 
 /**
  * @augments {ShapeComponent<FlashNotificationsNotificationProps>}
@@ -53,13 +58,25 @@ class FlashNotificationsNotification extends ShapeComponent {
     notification: PropTypes.object.isRequired,
     onMeasured: PropTypes.func.isRequired,
     onRemovedClicked: PropTypes.func.isRequired,
+    progress: PropTypes.number,
     removing: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired
   })
 
+  /** @type {import("react-native").Animated.Value} */
+  barSweep = new Animated.Value(0)
+  /** @type {import("react-native").Animated.CompositeAnimation | undefined} */
+  barSweepAnimation = undefined
+  /** @type {number} */
+  barTrackWidth = 0
+
+  componentWillUnmount() {
+    this.barSweepAnimation?.stop()
+  }
+
   render() {
-    const {count, message, title, type} = this.p
+    const {count, message, progress, title, type} = this.p
     const {className} = this.props
     const breakpoint = useBreakpoint()
 
@@ -92,6 +109,8 @@ class FlashNotificationsNotification extends ShapeComponent {
                   return "1px solid rgba(0, 0, 0, 0.95)"
                 } else if (type == "alert") {
                   return "1px solid rgba(204, 51, 0, 0.95)"
+                } else if (type == "activity") {
+                  return "1px solid rgba(30, 41, 59, 0.95)"
                 }
 
                 return undefined
@@ -103,6 +122,8 @@ class FlashNotificationsNotification extends ShapeComponent {
                   return "rgba(0, 0, 0, 0.87)"
                 } else if (type == "alert") {
                   return "rgba(204, 51, 0, 0.87)"
+                } else if (type == "activity") {
+                  return "rgba(30, 41, 59, 0.87)"
                 }
 
                 return undefined
@@ -144,6 +165,37 @@ class FlashNotificationsNotification extends ShapeComponent {
               {message}
             </Text>
           </View>
+          {type == "activity" ? (
+            <View
+              onLayout={this.tt.onBarLayout}
+              style={viewStyles.barTrack ||= {
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+                borderRadius: 2,
+                height: 4,
+                marginTop: 10,
+                overflow: "hidden"
+              }}
+              testID="flash-notifications-notification-bar"
+            >
+              {progress == undefined ? (
+                <Animated.View
+                  style={{
+                    ...barFillStyle,
+                    transform: [{translateX: this.barSweep}]
+                  }}
+                  testID="flash-notifications-notification-bar-fill"
+                />
+              ) : (
+                <View
+                  style={{
+                    ...barFillStyle,
+                    width: `${progress * 100}%`
+                  }}
+                  testID="flash-notifications-notification-bar-fill"
+                />
+              )}
+            </View>
+          ) : null}
         </Pressable>
       </Animated.View>
     )
@@ -172,6 +224,52 @@ class FlashNotificationsNotification extends ShapeComponent {
 
     if (!notification.measuredHeight) {
       this.p.onMeasured(notification, event.nativeEvent.layout.height)
+    }
+  }
+
+  /**
+   * @param {FlashNotificationsNotificationProps} prevProps
+   * @returns {void}
+   */
+  componentDidUpdate(prevProps) {
+    if (prevProps.progress == undefined && this.p.progress != undefined) {
+      this.barSweepAnimation?.stop()
+      this.barSweepAnimation = undefined
+      return
+    }
+
+    if (prevProps.progress != undefined && this.p.progress == undefined && this.barTrackWidth) {
+      this.startBarSweep()
+    }
+  }
+
+  /**
+   * @returns {void}
+   */
+  startBarSweep() {
+    this.barSweepAnimation?.stop()
+    this.barSweep.setValue(-this.barTrackWidth * 0.3)
+
+    const sweep = Animated.loop(
+      Animated.timing(this.barSweep, {duration: 1000, toValue: this.barTrackWidth, useNativeDriver: false})
+    )
+    sweep.start()
+    this.barSweepAnimation = sweep
+  }
+
+  /**
+   * @param {import("react-native").LayoutChangeEvent} event
+   * @returns {void}
+   */
+  onBarLayout = (event) => {
+    const trackWidth = event.nativeEvent.layout.width
+
+    if (!trackWidth || this.barTrackWidth == trackWidth) return
+
+    this.barTrackWidth = trackWidth
+
+    if (this.p.progress == undefined) {
+      this.startBarSweep()
     }
   }
 }

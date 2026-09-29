@@ -26,6 +26,17 @@ export default function App() {
             >
               <Text style={styles.testButtonText}>Show notification</Text>
             </Pressable>
+            <Pressable
+              onPress={() => {
+                const activity = FlashNotifications.activity({ message: 'Syncing...' });
+                setTimeout(() => activity.update({ progress: 0.5 }), 500);
+                setTimeout(() => activity.succeed('Synced!'), 1500);
+              }}
+              style={styles.testButton}
+              testID="flashNotifications/showActivity"
+            >
+              <Text style={styles.testButtonText}>Show activity</Text>
+            </Pressable>
           </Group>
         </ScrollView>
         <Container />

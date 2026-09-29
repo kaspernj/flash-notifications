@@ -1,0 +1,1 @@
+Add `FlashNotifications.activity({message})`, a long-running notification with a loading bar that never auto-dismisses. The returned handle exposes `update({progress})`, `succeed(message)`, `fail(message)`, and `done()` to move the bar and resolve the notification.
