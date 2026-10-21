@@ -23,32 +23,45 @@ import events from "./events.js"
  * @property {() => void} done Dismisses the notification without a tone change.
  */
 
+/**
+ * @typedef {object} NotificationOptions
+ * @property {boolean=} persistent When true the notification never auto-dismisses. It stays on
+ *   screen until it is dismissed, just like an activity notification, but without a progress bar.
+ * @property {"toast" | "modal"=} presentation "toast" (the default) renders the notification in the
+ *   usual stacked toast container. "modal" renders it as a centered dialog over a backdrop that
+ *   blocks interaction with the app underneath; it can only be left via its explicit dismiss
+ *   button.
+ */
+
 let activityNotificationCount = 0
 
 export default class FlashNotifications {
   /**
    * @param {string} message
+   * @param {NotificationOptions} [options]
    * @returns {void}
    */
-  static alert(message) {
-    FlashNotifications.show({type: "alert", text: message})
+  static alert(message, options) {
+    FlashNotifications.show({type: "alert", text: message, ...options})
   }
 
   /**
    * @param {string} message
+   * @param {NotificationOptions} [options]
    * @returns {void}
    */
-  static error(message) {
-    FlashNotifications.show({type: "error", text: message})
+  static error(message, options) {
+    FlashNotifications.show({type: "error", text: message, ...options})
   }
 
   /**
    * @param {unknown} error
+   * @param {NotificationOptions} [options]
    * @returns {void}
    */
-  static errorResponse(error) {
+  static errorResponse(error, options) {
     if (!(error instanceof Error)) {
-      FlashNotifications.error(typeof error == "string" ? error : String(error))
+      FlashNotifications.error(typeof error == "string" ? error : String(error), options)
 
       return
     }
@@ -60,11 +73,11 @@ export default class FlashNotifications {
         // @ts-expect-error
         const unhandledErrorMessages = error.getUnhandledErrors().map((subError) => subError.getFullErrorMessages()).flat()
 
-        FlashNotifications.error(unhandledErrorMessages.join(". "))
+        FlashNotifications.error(unhandledErrorMessages.join(". "), options)
       } else {
         const defaultValue = "Couldn't submit because of validation errors."
 
-        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}))
+        FlashNotifications.alert(configuration.translate("js.notification.couldnt_submit_because_of_validation_errors", {defaultValue}), options)
       }
     // @ts-expect-error
     } else if (error.apiMakerType == "BaseError") {
@@ -81,11 +94,11 @@ export default class FlashNotifications {
           return digg(error, "message")
         })
 
-        FlashNotifications.error(errorMessages.join(". "))
+        FlashNotifications.error(errorMessages.join(". "), options)
       } else if (error.message) {
-        FlashNotifications.error(error.message)
+        FlashNotifications.error(error.message, options)
       } else {
-        FlashNotifications.error(configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."}))
+        FlashNotifications.error(configuration.translate("js.shared.something_went_wrong", {defaultValue: "Something went wrong."}), options)
       }
     } else {
       const constructorName = digg(error, "constructor", "name")
@@ -93,16 +106,17 @@ export default class FlashNotifications {
       const message = digg(error, "message")
 
       console.error(`Didnt know what to do with that ${constructorName}: ${message}`)
-      FlashNotifications.error(defaultErrorMessage)
+      FlashNotifications.error(defaultErrorMessage, options)
     }
   }
 
   /**
    * @param {string} message
+   * @param {NotificationOptions} [options]
    * @returns {void}
    */
-  static success(message) {
-    FlashNotifications.show({type: "success", text: message})
+  static success(message, options) {
+    FlashNotifications.show({type: "success", text: message, ...options})
   }
 
   /**
@@ -165,6 +179,8 @@ export default class FlashNotifications {
    * @param {object} args
    * @param {string} args.text
    * @param {string} args.type
+   * @param {boolean=} args.persistent
+   * @param {"toast" | "modal"=} args.presentation
    * @returns {void}
    */
   static show(args) {
@@ -182,6 +198,8 @@ export default class FlashNotifications {
 
     events.emit("pushNotification", {
       message: args.text,
+      persistent: args.persistent,
+      presentation: args.presentation,
       title,
       type: args.type
     })
