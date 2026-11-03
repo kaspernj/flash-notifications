@@ -20,6 +20,8 @@ import FlashNotification from "./notification"
  * @property {number} count
  * @property {string | undefined} id
  * @property {string} message
+ * @property {boolean | undefined} persistent
+ * @property {"toast" | "modal" | undefined} presentation
  * @property {string} title
  * @property {string} type
  */
@@ -33,6 +35,8 @@ import FlashNotification from "./notification"
  * @property {number | undefined} measuredHeight
  * @property {string} message
  * @property {import("react-native").Animated.Value} opacity
+ * @property {boolean} persistent
+ * @property {"toast" | "modal"} presentation
  * @property {number | undefined} progress
  * @property {boolean} removing
  * @property {ReturnType<typeof setTimeout> | undefined} timeout
@@ -132,31 +136,70 @@ export default memo(shapeComponent(
       return style
     }, [isNative, smDown, mdUp, insets.top, insets.right, insets.left])
 
+    // Modal notifications live in their own full-screen overlay instead of the
+    // stacked toast container: the overlay covers the whole viewport so the app
+    // underneath cannot be interacted with until the modal is dismissed.
+    const modalNotifications = notifications.filter(
+      /** @param {StoredNotificationType} notification */
+      (notification) => notification.presentation == "modal"
+    )
+    const toastNotifications = notifications.filter(
+      /** @param {StoredNotificationType} notification */
+      (notification) => notification.presentation == "toast"
+    )
+
+    /**
+     * @param {StoredNotificationType} notification
+     * @returns {React.ReactElement}
+     */
+    const renderNotification = (notification) => (
+      <FlashNotification
+        count={notification.count}
+        key={`notification-${notification.count}`}
+        message={notification.message}
+        notification={notification}
+        onMeasured={this.onNotificationMeasured}
+        onRemovedClicked={this.onRemovedClicked}
+        persistent={notification.persistent}
+        presentation={notification.presentation}
+        progress={notification.progress}
+        removing={notification.removing}
+        title={notification.title}
+        type={notification.type}
+      />
+    )
+
     return (
-      <View
-        // @ts-expect-error
-        dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
-        // @ts-expect-error React Native types do not include the web-only "fixed" position.
-        style={viewStyle}
-        testID="flash-notificaitons/container"
-      >
-        {notifications.map(
-          /** @param {StoredNotificationType} notification */
-          (notification) =>
-          <FlashNotification
-            count={notification.count}
-            key={`notification-${notification.count}`}
-            message={notification.message}
-            notification={notification}
-            onMeasured={this.onNotificationMeasured}
-            onRemovedClicked={this.onRemovedClicked}
-            progress={notification.progress}
-            removing={notification.removing}
-            title={notification.title}
-            type={notification.type}
-          />
-        )}
-      </View>
+      <>
+        <View
+          // @ts-expect-error
+          dataSet={this.rootViewDataSet ||= {component: "flash-notifications-container"}}
+          // @ts-expect-error React Native types do not include the web-only "fixed" position.
+          style={viewStyle}
+          testID="flash-notificaitons/container"
+        >
+          {toastNotifications.map(renderNotification)}
+        </View>
+        {modalNotifications.length > 0 ? (
+          <View
+            // @ts-expect-error React Native types do not include the web-only "fixed" position.
+            style={{
+              // Unlike the toast container, this overlay swallows pointer events on purpose:
+              // a modal blocks interaction with the app underneath until it is dismissed.
+              pointerEvents: "auto",
+              position: isNative ? "absolute" : "fixed",
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              zIndex: 100000
+            }}
+            testID="flash-notifications/modal-overlay"
+          >
+            {modalNotifications.map(renderNotification)}
+          </View>
+        ) : null}
+      </>
     )
   }
 
@@ -183,8 +226,12 @@ export default memo(shapeComponent(
     }
 
     const count = this.s.count + 1
-    // Activity notifications stay on screen until their handle resolves them.
-    const timeout = type == "activity" ? undefined : setTimeout(() => {
+    const persistent = dig(detail, "persistent") == true
+    const presentation = dig(detail, "presentation") == "modal" ? "modal" : "toast"
+    // Activity notifications stay on screen until their handle resolves them, and
+    // persistent notifications stay until the user dismisses them. Both skip the
+    // auto-dismiss timer; only a plain toast gets one.
+    const timeout = type == "activity" || persistent ? undefined : setTimeout(() => {
       debugLog("FlashNotifications: notification timeout", {id: count})
       this.dismissNotificationByCount(count, "timeout")
     }, 4000)
@@ -202,6 +249,8 @@ export default memo(shapeComponent(
       measuredHeight: undefined,
       message: digg(detail, "message"),
       opacity: new Animated.Value(1),
+      persistent,
+      presentation,
       progress: undefined,
       removing: false,
       timeout,
@@ -211,6 +260,8 @@ export default memo(shapeComponent(
 
     debugLog("FlashNotifications: notification added", {
       id: count,
+      persistent: notification.persistent,
+      presentation: notification.presentation,
       title: notification.title,
       type: notification.type
     })

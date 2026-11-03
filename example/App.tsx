@@ -37,6 +37,25 @@ export default function App() {
             >
               <Text style={styles.testButtonText}>Show activity</Text>
             </Pressable>
+            <Pressable
+              onPress={() =>
+                FlashNotifications.error('Registration could not be saved.', {
+                  persistent: true,
+                  presentation: 'modal',
+                })
+              }
+              style={styles.testButton}
+              testID="flashNotifications/showPersistentModal"
+            >
+              <Text style={styles.testButtonText}>Show persistent modal</Text>
+            </Pressable>
+            <Pressable
+              onPress={() => FlashNotifications.alert('This one stays until dismissed.', { persistent: true })}
+              style={styles.testButton}
+              testID="flashNotifications/showPersistentToast"
+            >
+              <Text style={styles.testButtonText}>Show persistent toast</Text>
+            </Pressable>
           </Group>
         </ScrollView>
         <Container />

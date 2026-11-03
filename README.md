@@ -10,6 +10,14 @@ npm install flash-notifications
 
 For managed Expo projects, ensure your Expo SDK supports this module and follow the Expo install guidance for modules. For bare React Native projects, install and configure the `expo` package before continuing.
 
+`expo` is an optional peer dependency: the runtime code never imports it (it is only used by the native module build config). Plain web apps can use this package by aliasing `react-native$` to `react-native-web` in their bundler, for example in webpack:
+
+```js
+resolve: {
+  alias: {"react-native$": "react-native-web"}
+}
+```
+
 ## Setup
 
 Render the notification container once near the root of your app so it can listen for events globally.
@@ -69,13 +77,13 @@ FlashNotifications.show({type: "info", text: "Heads up!"})
 
 ### FlashNotifications
 
-`FlashNotifications.alert(message)`
+`FlashNotifications.alert(message, options?)`
 Shows an alert notification with a localized "Alert" title.
 
-`FlashNotifications.error(message)`
+`FlashNotifications.error(message, options?)`
 Shows an error notification with a localized "Error" title.
 
-`FlashNotifications.success(message)`
+`FlashNotifications.success(message, options?)`
 Shows a success notification with a localized "Success" title.
 
 `FlashNotifications.activity({message})`
@@ -86,13 +94,29 @@ Shows a long-running activity notification with a localized "Activity" title and
 - `handle.fail(message?)` flashes the error tone, then dismisses.
 - `handle.done()` dismisses without a tone change.
 
-`FlashNotifications.show({type, text})`
+`FlashNotifications.show({type, text, persistent?, presentation?})`
 Shows a notification with a localized title based on `type`. Unknown types fall back to the localized "Notification" title.
 
-`FlashNotifications.errorResponse(error)`
-Handles Api Maker validation and base errors, converting them into notifications. Unknown errors are logged and rethrown.
+### Notification options
 
-Notifications auto-dismiss after 4 seconds and can be dismissed immediately by pressing them. Activity notifications are the exception: they stay on screen until the handle resolves them (or the card is pressed, which acts like `done()`).
+`options` (second argument of `alert`/`error`/`success`/`errorResponse`, or extra keys in `show`) supports:
+
+- `persistent: true` — the notification never auto-dismisses. It stays on screen until it is dismissed, like an activity notification, but without a progress bar.
+- `presentation: "modal"` — the notification renders as a centered card over a full-screen backdrop that blocks interaction with the app underneath. It can only be dismissed via its explicit Dismiss button; backdrop clicks and Escape do not dismiss it. On web the dialog carries `role="alertdialog"` and `aria-modal`, focus moves into the dialog on open, and focus returns to the previously focused element on dismiss. The default is `"toast"` (the usual corner stack).
+
+```js
+import {FlashNotifications} from "flash-notifications"
+
+FlashNotifications.error("Registration could not be saved.", {
+  persistent: true,
+  presentation: "modal"
+})
+```
+
+Notifications auto-dismiss after 4 seconds and can be dismissed immediately by pressing them. Activity notifications are the exception: they stay on screen until the handle resolves them (or the card is pressed, which acts like `done()`). Notifications pushed with `persistent: true` stay until dismissed as well.
+
+`FlashNotifications.errorResponse(error, options?)`
+Handles Api Maker validation and base errors, converting them into notifications. Unknown errors are logged and rethrown. The options are passed through to the resulting notification.
 
 ### Container
 

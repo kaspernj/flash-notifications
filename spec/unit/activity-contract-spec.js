@@ -93,7 +93,7 @@ describe("FlashNotifications.activity contract", () => {
     const containerSource = await fs.readFile(new URL("../../src/container/index.jsx", import.meta.url), "utf8")
     const notificationSource = await fs.readFile(new URL("../../src/container/notification.jsx", import.meta.url), "utf8")
 
-    expect(containerSource).toContain('type == "activity" ? undefined : setTimeout(')
+    expect(containerSource).toContain('type == "activity" || persistent ? undefined : setTimeout(')
     expect(containerSource).toContain('"activityNotification"')
     // The succeed/fail actions must map onto the canonical success/error
     // tones so the dismiss flash actually changes the card tone.
